@@ -19,7 +19,7 @@ class ConnectDialog : public QDialog
     void on_buttonBox_accepted();
 
   private:
-    Ui::ConnectDialog ui;
+    Ui::ConnectDialog m_ui;
 };
 
 #endif

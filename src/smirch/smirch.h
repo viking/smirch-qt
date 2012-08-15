@@ -13,7 +13,7 @@ class Smirch : public QApplication
     Smirch(int &argc, char **argv);
 
   private:
-    MainWindow *window;
+    MainWindow *m_window;
 };
 
 #endif

@@ -3,6 +3,6 @@
 Smirch::Smirch(int &argc, char **argv)
   : QApplication(argc, argv)
 {
-  window = new MainWindow();
-  window->show();
+  m_window = new MainWindow();
+  m_window->show();
 }

@@ -3,27 +3,27 @@
 ConnectDialog::ConnectDialog(QWidget *parent)
   : QDialog(parent)
 {
-  ui.setupUi(this);
+  m_ui.setupUi(this);
 }
 
 QString ConnectDialog::server() const
 {
-  return ui.leServer->text();
+  return m_ui.leServer->text();
 }
 
 QString ConnectDialog::nickname() const
 {
-  return ui.leNickname->text();
+  return m_ui.leNickname->text();
 }
 
 QString ConnectDialog::username() const
 {
-  return ui.leUsername->text();
+  return m_ui.leUsername->text();
 }
 
 QString ConnectDialog::realName() const
 {
-  return ui.leRealName->text();
+  return m_ui.leRealName->text();
 }
 
 void ConnectDialog::on_buttonBox_accepted()

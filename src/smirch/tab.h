@@ -2,45 +2,48 @@
 #define __TAB_H
 
 #include <QWidget>
-#include <IrcSession>
-#include <IrcMessage>
 #include "ui_tab.h"
+#include "conversation.h"
 
 class Tab : public QWidget
 {
   Q_OBJECT
 
   public:
-    enum Type {
-      ServerTab,
-      ChannelTab,
-      QueryTab
-    };
-
     Tab(QWidget *parent = 0);
-    Tab(Type type, QWidget *parent = 0);
+    Tab(Conversation *conversation, QWidget *parent = 0);
 
-    IrcSession *session();
-    void setSession(IrcSession *session);
-    void setName(const QString &name);
+    const QString &recipient();
 
   signals:
-    void channelJoined(const QString &name);
+    void textEntered(const QString &text);
 
   private slots:
     void on_lineEdit_returnPressed();
-    void sessionDestroyed(QObject *object);
 
     void connecting();
     void connected();
     void disconnected();
-    void messageReceived(IrcMessage *message);
+
+    void unknownMessageReceived(IrcMessage *message);
+    void errorMessageReceived(IrcErrorMessage *message);
+    void inviteMessageReceived(IrcInviteMessage *message);
+    void joinMessageReceived(IrcJoinMessage *message);
+    void kickMessageReceived(IrcKickMessage *message);
+    void modeMessageReceived(IrcModeMessage *message);
+    void nickMessageReceived(IrcNickMessage *message);
+    void noticeMessageReceived(IrcNoticeMessage *message);
+    void numericMessageReceived(IrcNumericMessage *message);
+    void partMessageReceived(IrcPartMessage *message);
+    void pingMessageReceived(IrcPingMessage *message);
+    void pongMessageReceived(IrcPongMessage *message);
+    void privateMessageReceived(IrcPrivateMessage *message);
+    void quitMessageReceived(IrcQuitMessage *message);
+    void topicMessageReceived(IrcTopicMessage *message);
 
   private:
-    Ui::Tab ui;
-    Type m_type;
-    IrcSession *m_session;
-    QString m_name;
+    Ui::Tab m_ui;
+    Conversation *m_conversation;
 };
 
 #endif

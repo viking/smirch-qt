@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
+#include "session.h"
 
 class MainWindow : public QMainWindow
 {
@@ -13,10 +14,15 @@ class MainWindow : public QMainWindow
 
   private slots:
     void on_actionConnect_triggered();
-    void on_serverTab_channelJoined(const QString &name);
+    void handleInput(const QString &text);
+    void queryStarted(Query *query);
+    void channelJoined(Channel *channel);
 
   private:
-    Ui::MainWindow ui;
+    Ui::MainWindow m_ui;
+    Session *m_session;
+
+    void addTab(Tab *tab, const QString &name);
 };
 
 #endif

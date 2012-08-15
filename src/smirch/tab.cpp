@@ -2,101 +2,166 @@
 #include <IrcCommand>
 
 Tab::Tab(QWidget *parent)
-  : QWidget(parent), m_type(ServerTab), m_session(NULL)
+  : QWidget(parent), m_conversation(NULL)
 {
-  ui.setupUi(this);
+  m_ui.setupUi(this);
 }
 
-Tab::Tab(Type type, QWidget *parent)
-  : QWidget(parent), m_type(type), m_session(NULL)
+Tab::Tab(Conversation *conversation, QWidget *parent)
+  : QWidget(parent), m_conversation(conversation)
 {
-  ui.setupUi(this);
+  m_ui.setupUi(this);
+
+  connect(m_conversation, SIGNAL(unknownMessageReceived(IrcMessage *)),
+      this, SLOT(unknownMessageReceived(IrcMessage *)));
+  connect(m_conversation, SIGNAL(errorMessageReceived(IrcErrorMessage *)),
+      this, SLOT(errorMessageReceived(IrcErrorMessage *)));
+  connect(m_conversation, SIGNAL(inviteMessageReceived(IrcInviteMessage *)),
+      this, SLOT(inviteMessageReceived(IrcInviteMessage *)));
+  connect(m_conversation, SIGNAL(joinMessageReceived(IrcJoinMessage *)),
+      this, SLOT(joinMessageReceived(IrcJoinMessage *)));
+  connect(m_conversation, SIGNAL(kickMessageReceived(IrcKickMessage *)),
+      this, SLOT(kickMessageReceived(IrcKickMessage *)));
+  connect(m_conversation, SIGNAL(modeMessageReceived(IrcModeMessage *)),
+      this, SLOT(modeMessageReceived(IrcModeMessage *)));
+  connect(m_conversation, SIGNAL(nickMessageReceived(IrcNickMessage *)),
+      this, SLOT(nickMessageReceived(IrcNickMessage *)));
+  connect(m_conversation, SIGNAL(noticeMessageReceived(IrcNoticeMessage *)),
+      this, SLOT(noticeMessageReceived(IrcNoticeMessage *)));
+  connect(m_conversation, SIGNAL(numericMessageReceived(IrcNumericMessage *)),
+      this, SLOT(numericMessageReceived(IrcNumericMessage *)));
+  connect(m_conversation, SIGNAL(partMessageReceived(IrcPartMessage *)),
+      this, SLOT(partMessageReceived(IrcPartMessage *)));
+  connect(m_conversation, SIGNAL(pingMessageReceived(IrcPingMessage *)),
+      this, SLOT(pingMessageReceived(IrcPingMessage *)));
+  connect(m_conversation, SIGNAL(pongMessageReceived(IrcPongMessage *)),
+      this, SLOT(pongMessageReceived(IrcPongMessage *)));
+  connect(m_conversation, SIGNAL(privateMessageReceived(IrcPrivateMessage *)),
+      this, SLOT(privateMessageReceived(IrcPrivateMessage *)));
+  connect(m_conversation, SIGNAL(quitMessageReceived(IrcQuitMessage *)),
+      this, SLOT(quitMessageReceived(IrcQuitMessage *)));
+  connect(m_conversation, SIGNAL(topicMessageReceived(IrcTopicMessage *)),
+      this, SLOT(topicMessageReceived(IrcTopicMessage *)));
 }
 
-IrcSession *Tab::session()
+const QString &Tab::recipient()
 {
-  return m_session;
-}
-
-void Tab::setSession(IrcSession *session)
-{
-  if (m_session != NULL) {
-    disconnect(m_session, 0, this, 0);
+  if (m_conversation != NULL) {
+    return m_conversation->recipient();
   }
-
-  m_session = session;
-  connect(m_session, SIGNAL(connecting()), this, SLOT(connecting()));
-  connect(m_session, SIGNAL(connected()), this, SLOT(connected()));
-  connect(m_session, SIGNAL(disconnected()), this, SLOT(disconnected()));
-  connect(m_session, SIGNAL(messageReceived(IrcMessage *)), this, SLOT(messageReceived(IrcMessage *)));
-  connect(m_session, SIGNAL(destroyed(QObject *)), this, SLOT(sessionDestroyed(QObject *)));
-}
-
-void Tab::setName(const QString &name)
-{
-  m_name = name;
+  else {
+    return QString();
+  }
 }
 
 void Tab::connecting()
 {
-  ui.textBrowser->append("Connecting...");
+  m_ui.textBrowser->append("Connecting...");
 }
 
 void Tab::connected()
 {
-  ui.textBrowser->append("Connected!");
+  m_ui.textBrowser->append("Connected!");
 }
 
 void Tab::disconnected()
 {
-  ui.textBrowser->append("Disconnected.");
+  m_ui.textBrowser->append("Disconnected.");
 }
 
-void Tab::messageReceived(IrcMessage *message)
+void Tab::unknownMessageReceived(IrcMessage *message)
 {
-  switch (m_type) {
-    case ServerTab:
-      switch (message->type()) {
-        case IrcMessage::Join:
-          if (message->isOwn()) {
-            IrcJoinMessage *joinMessage = static_cast<IrcJoinMessage *>(message);
-            emit channelJoined(joinMessage->channel());
-          }
-          break;
-      }
-      break;
-    case ChannelTab:
-      break;
-    case QueryTab:
-      break;
-  }
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::errorMessageReceived(IrcErrorMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::inviteMessageReceived(IrcInviteMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::joinMessageReceived(IrcJoinMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::kickMessageReceived(IrcKickMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::modeMessageReceived(IrcModeMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::nickMessageReceived(IrcNickMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::noticeMessageReceived(IrcNoticeMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::numericMessageReceived(IrcNumericMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::partMessageReceived(IrcPartMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::pingMessageReceived(IrcPingMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::pongMessageReceived(IrcPongMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::privateMessageReceived(IrcPrivateMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::quitMessageReceived(IrcQuitMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
+}
+
+void Tab::topicMessageReceived(IrcTopicMessage *message)
+{
+  QByteArray data = message->toData();
+  m_ui.textBrowser->append(QString(data));
 }
 
 void Tab::on_lineEdit_returnPressed()
 {
-  if (m_session != NULL) {
-    QString s = ui.lineEdit->text();
-    if (s.startsWith("/")) {
-      IrcCommand *command = NULL;
-
-      QStringList args = s.split(" ");
-      QString commandName = args[0].right(args[0].length() - 1).toLower();
-      if (commandName == "join") {
-        command = IrcCommand::createJoin(args[1]);
-      }
-
-      if (command != NULL) {
-        m_session->sendCommand(command);
-      }
-    }
-
-    ui.lineEdit->clear();
-  }
-}
-
-void Tab::sessionDestroyed(QObject *obj)
-{
-  if (obj == m_session) {
-    m_session = NULL;
-  }
+  QString text = m_ui.lineEdit->text();
+  emit textEntered(text);
+  m_ui.lineEdit->clear();
 }
