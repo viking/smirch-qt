@@ -1,5 +1,7 @@
 #include "session.h"
 
+#include <QtDebug>
+
 Session::Session(QObject *parent)
   : IrcSession(parent)
 {

@@ -1,6 +1,8 @@
 #include <IrcCommand>
 #include "mainwindow.h"
 #include "connectdialog.h"
+#include "tab.h"
+#include "channeltab.h"
 
 #include <QtDebug>
 
@@ -33,6 +35,7 @@ void MainWindow::on_actionConnect_triggered()
 
     m_session = new Session(this);
     m_session->setHost(dialog.server());
+    m_session->setPort(dialog.port());
     m_session->setUserName(dialog.username());
     m_session->setNickName(dialog.nickname());
     m_session->setRealName(dialog.realName());
@@ -57,10 +60,8 @@ void MainWindow::on_actionConnect_triggered()
 void MainWindow::handleInput(const QString &text)
 {
   if (m_session != NULL) {
-    qDebug() << "Handle:" << text;
+    IrcCommand *command = NULL;
     if (text.startsWith("/")) {
-      IrcCommand *command = NULL;
-
       QString commandName = text.section(" ", 0, 0).mid(1).toLower();
       QString predicate = text.section(" ", 1);
       if (commandName == "join") {
@@ -70,11 +71,12 @@ void MainWindow::handleInput(const QString &text)
       else if (commandName == "quit") {
         command = IrcCommand::createQuit(predicate);
       }
-
-      if (command != NULL) {
-        qDebug() << "Sending:" << command->toString();
-        m_session->sendCommand(command);
-      }
+    }
+    if (command == NULL) {
+      qDebug() << "Unknown command:" << text;
+    }
+    else {
+      m_session->sendCommand(command);
     }
   }
 }
@@ -87,11 +89,11 @@ void MainWindow::queryStarted(Query *query)
 
 void MainWindow::channelJoined(Channel *channel)
 {
-  Tab *tab = new Tab(channel);
+  ChannelTab *tab = new ChannelTab(channel);
   addTab(tab, channel->name());
 }
 
-void MainWindow::addTab(Tab *tab, const QString &name)
+void MainWindow::addTab(AbstractTab *tab, const QString &name)
 {
   connect(tab, SIGNAL(textEntered(const QString &)),
       this, SLOT(handleInput(const QString &)));

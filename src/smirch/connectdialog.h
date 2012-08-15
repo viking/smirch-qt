@@ -11,6 +11,7 @@ class ConnectDialog : public QDialog
   public:
     ConnectDialog(QWidget *parent = 0);
     QString server() const;
+    int port() const;
     QString nickname() const;
     QString username() const;
     QString realName() const;

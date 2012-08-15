@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
+#include "abstracttab.h"
 #include "session.h"
 
 class MainWindow : public QMainWindow
@@ -22,7 +23,7 @@ class MainWindow : public QMainWindow
     Ui::MainWindow m_ui;
     Session *m_session;
 
-    void addTab(Tab *tab, const QString &name);
+    void addTab(AbstractTab *tab, const QString &name);
 };
 
 #endif

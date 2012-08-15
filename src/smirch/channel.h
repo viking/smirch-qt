@@ -1,9 +1,8 @@
 #ifndef __CHANNEL_H
 #define __CHANNEL_H
 
-#include <QList>
+#include <QStringList>
 #include "conversation.h"
-#include "person.h"
 
 class Channel : public Conversation
 {
@@ -14,17 +13,25 @@ class Channel : public Conversation
 
     const QString &name() const;
     const QString &recipient() const;
+    const QStringList &nicks() const;
 
     bool includes(IrcJoinMessage *message);
     bool includes(IrcKickMessage *message);
     bool includes(IrcModeMessage *message);
+    bool includes(IrcNumericMessage *message);
     bool includes(IrcPartMessage *message);
     bool includes(IrcPrivateMessage *message);
     bool includes(IrcTopicMessage *message);
 
+    void handleNumericMessage(IrcNumericMessage *message);
+
+  signals:
+    void nicksChanged(QStringList added, QStringList removed);
+
   private:
     QString m_name;
-    QList<Person *> m_people;
+    QStringList m_nicks;
+    QStringList m_newNicks;
 };
 
 #endif

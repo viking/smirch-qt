@@ -11,6 +11,11 @@ QString ConnectDialog::server() const
   return m_ui.leServer->text();
 }
 
+int ConnectDialog::port() const
+{
+  return m_ui.sbPort->value();
+}
+
 QString ConnectDialog::nickname() const
 {
   return m_ui.leNickname->text();
