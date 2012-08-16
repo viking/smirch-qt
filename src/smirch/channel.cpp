@@ -4,6 +4,7 @@
 Channel::Channel(const QString &name, QObject *parent)
   : Conversation(parent), m_name(name)
 {
+  m_nickListModel = new NickListModel(this);
 }
 
 const QString &Channel::name() const
@@ -18,7 +19,12 @@ const QString &Channel::recipient() const
 
 const QStringList &Channel::nicks() const
 {
-  return m_nicks;
+  return m_nickListModel->stringList();
+}
+
+NickListModel *Channel::nickListModel() const
+{
+  return m_nickListModel;
 }
 
 bool Channel::includes(IrcJoinMessage *message)
@@ -69,18 +75,39 @@ void Channel::handleNumericMessage(IrcNumericMessage *message)
 {
   switch (message->code()) {
     case Irc::RPL_NAMREPLY:
+      m_mutex.lock();
       m_newNicks << message->parameters()[3].split(" ");
+      m_mutex.unlock();
       break;
 
     case Irc::RPL_ENDOFNAMES:
+      m_mutex.lock();
       m_newNicks.sort();
-      m_nicks = m_newNicks;
+      m_nickListModel->setStringList(m_newNicks);
       m_newNicks.clear();
-      emit nicksChanged(m_nicks);
+      m_mutex.unlock();
       break;
 
     default:
       emit numericMessageReceived(message);
       break;
   }
+}
+
+void Channel::handleJoinMessage(IrcJoinMessage *message)
+{
+  m_mutex.lock();
+  m_nickListModel->addNick(message->sender().name());
+  m_mutex.unlock();
+
+  emit joinMessageReceived(message);
+}
+
+void Channel::handlePartMessage(IrcPartMessage *message)
+{
+  m_mutex.lock();
+  m_nickListModel->removeNick(message->sender().name());
+  m_mutex.unlock();
+
+  emit partMessageReceived(message);
 }

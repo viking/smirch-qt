@@ -6,13 +6,32 @@
 
 #include <QtDebug>
 
+#define CLOSE_TIMEOUT 3000
+
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent), m_session(NULL)
+  : QMainWindow(parent), m_session(NULL), m_closeEvent(NULL)
 {
   m_ui.setupUi(this);
 
+  m_closeTimer.setSingleShot(true);
+  connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
   connect(m_ui.serverTab, SIGNAL(textEntered(const QString &)),
       this, SLOT(handleInput(const QString &)));
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+  if (m_session != NULL && m_session->isActive()) {
+    /* Close out the session first */
+    qDebug() << "Quitting...";
+    m_closeEvent = event;
+    connect(m_session, SIGNAL(disconnected()), this, SLOT(closeWindow()));
+    m_session->sendCommand(IrcCommand::createQuit("Quitting..."));
+    m_closeTimer.start(CLOSE_TIMEOUT);
+  }
+  else {
+    QMainWindow::closeEvent(event);
+  }
 }
 
 void MainWindow::on_actionConnect_triggered()
@@ -91,6 +110,18 @@ void MainWindow::channelJoined(Channel *channel)
 {
   ChannelTab *tab = new ChannelTab(channel);
   addTab(tab, channel->name());
+}
+
+void MainWindow::closeWindow()
+{
+  m_closeTimer.stop();
+  if (m_session != NULL) {
+    if (m_session->isActive()) {
+      qDebug() << "Forced close!";
+      m_session->close();
+    }
+  }
+  QMainWindow::closeEvent(m_closeEvent);
 }
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)
