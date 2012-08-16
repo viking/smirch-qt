@@ -1,17 +1,15 @@
-#include "abstracttab.h"
 #include <IrcCommand>
+#include <IrcUtil>
+#include "abstracttab.h"
 
 AbstractTab::AbstractTab(QWidget *parent)
-  : QWidget(parent), m_conversation(NULL), m_uiInitialized(false)
+  : QWidget(parent), m_conversation(NULL)
 {
 }
 
 AbstractTab::AbstractTab(Conversation *conversation, QWidget *parent)
-  : QWidget(parent), m_conversation(conversation), m_uiInitialized(false)
+  : QWidget(parent), m_conversation(conversation)
 {
-  // FIXME: This creates a race condition if the UI is not initialized
-  // before one of these signals are emitted. The current workaround
-  // (using m_uiInitialized) is not the best.
   connect(m_conversation, SIGNAL(unknownMessageReceived(IrcMessage *)),
       this, SLOT(unknownMessageReceived(IrcMessage *)));
   connect(m_conversation, SIGNAL(errorMessageReceived(IrcErrorMessage *)),
@@ -143,8 +141,14 @@ void AbstractTab::pongMessageReceived(IrcPongMessage *message)
 
 void AbstractTab::privateMessageReceived(IrcPrivateMessage *message)
 {
-  QByteArray data = message->toData();
-  appendText(QString(data));
+  if (message->isAction()) {
+    appendText(QString("* %1 %2").arg(message->sender().name()).
+        arg(IrcUtil::messageToHtml(message->message())));
+  }
+  else {
+    appendText(QString("<%1> %2").arg(message->sender().name()).
+        arg(IrcUtil::messageToHtml(message->message())));
+  }
 }
 
 void AbstractTab::quitMessageReceived(IrcQuitMessage *message)

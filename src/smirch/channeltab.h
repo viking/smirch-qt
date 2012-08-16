@@ -1,6 +1,7 @@
 #ifndef __CHANNELTAB_H
 #define __CHANNELTAB_H
 
+#include <QStringListModel>
 #include "abstracttab.h"
 #include "ui_channeltab.h"
 
@@ -16,10 +17,11 @@ class ChannelTab : public AbstractTab
 
   private slots:
     void on_lineEdit_returnPressed();
-    void nicksChanged(QStringList added, QStringList removed);
+    void nicksChanged(const QStringList &nicks);
 
   private:
     Ui::ChannelTab m_ui;
+    QStringListModel nicksModel;
 
     void setupUi();
 };

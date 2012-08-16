@@ -14,9 +14,7 @@ Tab::Tab(Conversation *conversation, QWidget *parent)
 
 void Tab::appendText(QString text)
 {
-  if (m_uiInitialized) {
-    m_ui.textBrowser->append(text);
-  }
+  m_ui.textBrowser->append(text);
 }
 
 void Tab::on_lineEdit_returnPressed()
@@ -29,5 +27,4 @@ void Tab::on_lineEdit_returnPressed()
 void Tab::setupUi()
 {
   m_ui.setupUi(this);
-  m_uiInitialized = true;
 }

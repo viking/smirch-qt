@@ -31,24 +31,6 @@ class Session : public IrcSession
 
     Query *createQuery(Person *person);
     Channel *createChannel(const QString &name);
-
-    template <class T>
-    Conversation *findConversation(T message)
-    {
-      Conversation *result = NULL;
-
-      m_mutex.lock();
-      for (int i = 0; i < m_conversations.size(); i++) {
-        Conversation *c = m_conversations[i];
-        if (c->includes(message)) {
-          result = c;
-          break;
-        }
-      }
-      m_mutex.unlock();
-
-      return result;
-    }
 };
 
 #endif

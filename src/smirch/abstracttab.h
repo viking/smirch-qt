@@ -40,7 +40,6 @@ class AbstractTab : public QWidget
 
   protected:
     Conversation *m_conversation;
-    bool m_uiInitialized;
 
     virtual void appendText(QString text) = 0;
 };

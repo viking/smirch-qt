@@ -4,17 +4,15 @@
 ChannelTab::ChannelTab(Conversation *conversation, QWidget *parent)
   : AbstractTab(conversation, parent)
 {
-  connect(m_conversation, SIGNAL(nicksChanged(QStringList, QStringList)),
-      this, SLOT(nicksChanged(QStringList, QStringList)));
+  connect(m_conversation, SIGNAL(nicksChanged(const QStringList &)),
+      this, SLOT(nicksChanged(const QStringList &)));
 
   setupUi();
 }
 
 void ChannelTab::appendText(QString text)
 {
-  if (m_uiInitialized) {
-    m_ui.textBrowser->append(text);
-  }
+  m_ui.textBrowser->append(text);
 }
 
 void ChannelTab::on_lineEdit_returnPressed()
@@ -24,21 +22,13 @@ void ChannelTab::on_lineEdit_returnPressed()
   m_ui.lineEdit->clear();
 }
 
-void ChannelTab::nicksChanged(QStringList added, QStringList removed)
+void ChannelTab::nicksChanged(const QStringList &nicks)
 {
-  if (m_uiInitialized) {
-    qDebug() << recipient() << "added:" << added;
-    qDebug() << recipient() << "removed:" << removed;
-    m_ui.nicks->addItems(added);
-    // FIXME: remove stuff!
-  }
-  else {
-    qDebug() << recipient() << "ui wasn't initialized yet!";
-  }
+  nicksModel.setStringList(nicks);
 }
 
 void ChannelTab::setupUi()
 {
   m_ui.setupUi(this);
-  m_uiInitialized = true;
+  m_ui.nicks->setModel(&nicksModel);
 }

@@ -1,5 +1,4 @@
 #include <Irc>
-#include <QSet>
 #include "channel.h"
 
 Channel::Channel(const QString &name, QObject *parent)
@@ -75,22 +74,9 @@ void Channel::handleNumericMessage(IrcNumericMessage *message)
 
     case Irc::RPL_ENDOFNAMES:
       m_newNicks.sort();
-      if (m_newNicks != m_nicks) {
-        if (m_nicks.isEmpty()) {
-          emit nicksChanged(m_newNicks, QStringList());
-        }
-        else {
-          QSet<QString> oldSet = QSet<QString>::fromList(m_nicks);
-          QSet<QString> newSet = QSet<QString>::fromList(m_newNicks);
-          QStringList added = (newSet - oldSet).toList();
-          QStringList removed = (oldSet - newSet).toList();
-          added.sort();
-          removed.sort();
-          emit nicksChanged(added, removed);
-        }
-        m_nicks = m_newNicks;
-      }
+      m_nicks = m_newNicks;
       m_newNicks.clear();
+      emit nicksChanged(m_nicks);
       break;
 
     default:

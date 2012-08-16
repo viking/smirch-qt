@@ -29,6 +29,7 @@ class Conversation : public QObject
     virtual bool includes(IrcQuitMessage *message);
     virtual bool includes(IrcTopicMessage *message);
 
+    virtual void handleMessage(IrcMessage *message);
     virtual void handleUnknownMessage(IrcMessage *message);
     virtual void handleErrorMessage(IrcErrorMessage *message);
     virtual void handleInviteMessage(IrcInviteMessage *message);

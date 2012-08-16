@@ -26,7 +26,7 @@ class Channel : public Conversation
     void handleNumericMessage(IrcNumericMessage *message);
 
   signals:
-    void nicksChanged(QStringList added, QStringList removed);
+    void nicksChanged(const QStringList &nicks);
 
   private:
     QString m_name;
