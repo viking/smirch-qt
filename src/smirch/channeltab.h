@@ -12,7 +12,7 @@ class ChannelTab : public AbstractTab
     ChannelTab(Conversation *conversation, QWidget *parent = 0);
 
   protected:
-    void appendText(QString text);
+    QTextEdit *textEdit() const;
 
   private slots:
     void on_lineEdit_returnPressed();

@@ -8,9 +8,9 @@ ChannelTab::ChannelTab(Conversation *conversation, QWidget *parent)
   setupUi();
 }
 
-void ChannelTab::appendText(QString text)
+QTextEdit *ChannelTab::textEdit() const
 {
-  m_ui.textBrowser->append(text);
+  return m_ui.textEdit;
 }
 
 void ChannelTab::on_lineEdit_returnPressed()

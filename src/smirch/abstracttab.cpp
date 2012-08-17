@@ -162,3 +162,9 @@ void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
   QByteArray data = message->toData();
   appendText(QString(data));
 }
+
+void AbstractTab::appendText(QString text)
+{
+  QTextEdit *widget = textEdit();
+  widget->append(text);
+}

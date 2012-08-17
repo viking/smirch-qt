@@ -2,6 +2,7 @@
 #define __ABSTRACTTAB_H
 
 #include <QWidget>
+#include <QTextEdit>
 #include "conversation.h"
 
 class AbstractTab : public QWidget
@@ -41,7 +42,8 @@ class AbstractTab : public QWidget
   protected:
     Conversation *m_conversation;
 
-    virtual void appendText(QString text) = 0;
+    void appendText(QString text);
+    virtual QTextEdit *textEdit() const = 0;
 };
 
 #endif

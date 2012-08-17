@@ -12,9 +12,9 @@ Tab::Tab(Conversation *conversation, QWidget *parent)
   setupUi();
 }
 
-void Tab::appendText(QString text)
+QTextEdit *Tab::textEdit() const
 {
-  m_ui.textBrowser->append(text);
+  return m_ui.textEdit;
 }
 
 void Tab::on_lineEdit_returnPressed()

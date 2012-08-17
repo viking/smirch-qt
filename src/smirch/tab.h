@@ -13,7 +13,7 @@ class Tab : public AbstractTab
     Tab(Conversation *conversation, QWidget *parent = 0);
 
   protected:
-    void appendText(QString text);
+    QTextEdit *textEdit() const;
 
   private slots:
     void on_lineEdit_returnPressed();
