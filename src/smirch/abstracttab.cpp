@@ -181,7 +181,7 @@ void AbstractTab::handleInput()
 {
   QLineEdit *widget = lineEdit();
   QString text = widget->text();
-  emit textEntered(text);
+  emit inputReceived(recipient(), text);
   widget->clear();
 }
 

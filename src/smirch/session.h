@@ -3,6 +3,7 @@
 
 #include <IrcSession>
 #include <IrcMessage>
+#include <IrcCommand>
 #include <QMutex>
 #include <QList>
 
@@ -24,6 +25,7 @@ class Session : public IrcSession
 
   private slots:
     void handleMessage(IrcMessage *message);
+    void handleCommand(IrcCommand *command);
 
   private:
     QMutex m_mutex;

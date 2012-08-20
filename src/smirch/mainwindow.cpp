@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
-  connect(m_ui.serverTab, SIGNAL(textEntered(const QString &)),
-      this, SLOT(handleInput(const QString &)));
+  connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
+      &inputHandler, SLOT(handleInput(const QString &, const QString &)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -48,6 +48,7 @@ void MainWindow::on_actionConnect_triggered()
         widget->deleteLater();
       }
       disconnect(m_session, 0, 0, 0);
+      disconnect(&inputHandler, 0, m_session, 0);
       m_session->deleteLater();
       m_session = NULL;
     }
@@ -71,32 +72,10 @@ void MainWindow::on_actionConnect_triggered()
         this, SLOT(channelJoined(Channel *)));
     connect(m_session, SIGNAL(queryStarted(Query *)),
         this, SLOT(queryStarted(Query *)));
+    connect(&inputHandler, SIGNAL(commandReady(IrcCommand *)),
+        m_session, SLOT(handleCommand(IrcCommand *)));
 
     m_session->open();
-  }
-}
-
-void MainWindow::handleInput(const QString &text)
-{
-  if (m_session != NULL) {
-    IrcCommand *command = NULL;
-    if (text.startsWith("/")) {
-      QString commandName = text.section(" ", 0, 0).mid(1).toLower();
-      QString predicate = text.section(" ", 1);
-      if (commandName == "join") {
-        QStringList args = predicate.split(" ");
-        command = IrcCommand::createJoin(args[0]);
-      }
-      else if (commandName == "quit") {
-        command = IrcCommand::createQuit(predicate);
-      }
-    }
-    if (command == NULL) {
-      qDebug() << "Unknown command:" << text;
-    }
-    else {
-      m_session->sendCommand(command);
-    }
   }
 }
 
@@ -126,8 +105,8 @@ void MainWindow::closeWindow()
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)
 {
-  connect(tab, SIGNAL(textEntered(const QString &)),
-      this, SLOT(handleInput(const QString &)));
+  connect(tab, SIGNAL(inputReceived(const QString &, const QString &)),
+      &inputHandler, SLOT(handleInput(const QString &, const QString &)));
   connect(m_session, SIGNAL(connecting()),
       tab, SLOT(connecting()));
   connect(m_session, SIGNAL(connected()),

@@ -6,6 +6,7 @@
 #include "ui_mainwindow.h"
 #include "abstracttab.h"
 #include "session.h"
+#include "inputhandler.h"
 
 class MainWindow : public QMainWindow
 {
@@ -19,7 +20,6 @@ class MainWindow : public QMainWindow
 
   private slots:
     void on_actionConnect_triggered();
-    void handleInput(const QString &text);
     void queryStarted(Query *query);
     void channelJoined(Channel *channel);
     void closeWindow();
@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow
     Session *m_session;
     QTimer m_closeTimer;
     QCloseEvent *m_closeEvent;
+    InputHandler inputHandler;
 
     void addTab(AbstractTab *tab, const QString &name);
     void closeSession();

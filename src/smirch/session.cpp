@@ -71,6 +71,23 @@ void Session::handleMessage(IrcMessage *message)
   }
 }
 
+void Session::handleCommand(IrcCommand *command)
+{
+  IrcMessage *message = NULL;
+  if (command->type() == IrcCommand::Message) {
+    message = IrcMessage::fromCommand(nickName(), command);
+  }
+
+  if (sendCommand(command)) {
+    if (message != NULL) {
+      handleMessage(message);
+    }
+  }
+  else {
+    qDebug() << "Failed to send command:" << command->toString();
+  }
+}
+
 Query *Session::createQuery(Person *person)
 {
   Query *query = new Query(person, this);

@@ -17,7 +17,7 @@ class AbstractTab : public QWidget
     QString recipient() const;
 
   signals:
-    void textEntered(const QString &text);
+    void inputReceived(const QString &target, const QString &text);
 
   protected slots:
     void connecting();
