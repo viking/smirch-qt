@@ -87,8 +87,9 @@ void AbstractTab::inviteMessageReceived(IrcInviteMessage *message)
 
 void AbstractTab::joinMessageReceived(IrcJoinMessage *message)
 {
-  QByteArray data = message->toData();
-  appendText(QString(data));
+  IrcSender s = message->sender();
+  appendText(QString("* %1 (%2@%3) has joined %4").
+      arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()));
 }
 
 void AbstractTab::kickMessageReceived(IrcKickMessage *message)
@@ -117,14 +118,22 @@ void AbstractTab::noticeMessageReceived(IrcNoticeMessage *message)
 
 void AbstractTab::numericMessageReceived(IrcNumericMessage *message)
 {
-  QByteArray data = message->toData();
-  appendText(QString(data));
+  QStringList parameters = message->parameters();
+  parameters.removeFirst();
+  appendText(parameters.join(" "));
 }
 
 void AbstractTab::partMessageReceived(IrcPartMessage *message)
 {
-  QByteArray data = message->toData();
-  appendText(QString(data));
+  IrcSender s = message->sender();
+  QString str = QString("* %1 (%2@%3) has left %4").
+      arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel());
+
+  if (!message->reason().isEmpty()) {
+    str.append(QString(" (%1)").arg(message->reason()));
+  }
+
+  appendText(str);
 }
 
 void AbstractTab::pingMessageReceived(IrcPingMessage *message)
@@ -153,8 +162,13 @@ void AbstractTab::privateMessageReceived(IrcPrivateMessage *message)
 
 void AbstractTab::quitMessageReceived(IrcQuitMessage *message)
 {
-  QByteArray data = message->toData();
-  appendText(QString(data));
+  if (!message->reason().isEmpty()) {
+    appendText(QString("* %1 has quit (%2)").arg(message->sender().name()).
+        arg(message->reason()));
+  }
+  else {
+    appendText(QString("* %1 has quit").arg(message->sender().name()));
+  }
 }
 
 void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
