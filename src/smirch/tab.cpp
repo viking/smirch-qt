@@ -17,14 +17,13 @@ QTextEdit *Tab::textEdit() const
   return m_ui.textEdit;
 }
 
-void Tab::on_lineEdit_returnPressed()
+QLineEdit *Tab::lineEdit() const
 {
-  QString text = m_ui.lineEdit->text();
-  emit textEntered(text);
-  m_ui.lineEdit->clear();
+  return m_ui.lineEdit;
 }
 
 void Tab::setupUi()
 {
   m_ui.setupUi(this);
+  connect(m_ui.lineEdit, SIGNAL(returnPressed()), this, SLOT(handleInput()));
 }

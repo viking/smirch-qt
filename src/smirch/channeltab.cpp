@@ -13,15 +13,14 @@ QTextEdit *ChannelTab::textEdit() const
   return m_ui.textEdit;
 }
 
-void ChannelTab::on_lineEdit_returnPressed()
+QLineEdit *ChannelTab::lineEdit() const
 {
-  QString text = m_ui.lineEdit->text();
-  emit textEntered(text);
-  m_ui.lineEdit->clear();
+  return m_ui.lineEdit;
 }
 
 void ChannelTab::setupUi()
 {
   m_ui.setupUi(this);
   m_ui.nicks->setModel(static_cast<Channel *>(m_conversation)->nickListModel());
+  connect(m_ui.lineEdit, SIGNAL(returnPressed()), this, SLOT(handleInput()));
 }

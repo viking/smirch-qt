@@ -14,9 +14,7 @@ class Tab : public AbstractTab
 
   protected:
     QTextEdit *textEdit() const;
-
-  private slots:
-    void on_lineEdit_returnPressed();
+    QLineEdit *lineEdit() const;
 
   private:
     Ui::Tab m_ui;

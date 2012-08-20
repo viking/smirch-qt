@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTextEdit>
+#include <QLineEdit>
 #include "conversation.h"
 
 class AbstractTab : public QWidget
@@ -39,11 +40,14 @@ class AbstractTab : public QWidget
     void quitMessageReceived(IrcQuitMessage *message);
     void topicMessageReceived(IrcTopicMessage *message);
 
+    void handleInput();
+
   protected:
     Conversation *m_conversation;
 
     void appendText(QString text);
     virtual QTextEdit *textEdit() const = 0;
+    virtual QLineEdit *lineEdit() const = 0;
 };
 
 #endif

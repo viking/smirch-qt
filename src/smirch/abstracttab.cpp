@@ -163,6 +163,14 @@ void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
   appendText(QString(data));
 }
 
+void AbstractTab::handleInput()
+{
+  QLineEdit *widget = lineEdit();
+  QString text = widget->text();
+  emit textEntered(text);
+  widget->clear();
+}
+
 void AbstractTab::appendText(QString text)
 {
   QTextEdit *widget = textEdit();
