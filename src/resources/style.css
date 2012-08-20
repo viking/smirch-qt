@@ -1,0 +1,10 @@
+body {
+  font-family: 'DejaVu Sans Mono';
+  font-size: 12pt;
+  font-weight: 400;
+  font-style: normal;
+}
+div.message {
+  padding-left: 1em;
+  text-indent: -1em;
+}

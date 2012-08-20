@@ -12,11 +12,12 @@ MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent), m_session(NULL), m_closeEvent(NULL)
 {
   m_ui.setupUi(this);
+  m_ui.serverTab->setFocus();
+  connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
+      &inputHandler, SLOT(handleInput(const QString &, const QString &)));
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
-  connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
-      &inputHandler, SLOT(handleInput(const QString &, const QString &)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

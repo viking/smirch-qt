@@ -1,4 +1,5 @@
 #include "inputhandler.h"
+#include "abstracttab.h"
 #include <QtDebug>
 
 InputHandler::InputHandler(QObject *parent)
@@ -25,7 +26,10 @@ void InputHandler::handleInput(const QString &target, const QString &text)
   }
 
   if (command == NULL) {
-    qDebug() << "Unknown command:" << text;
+    AbstractTab *tab = qobject_cast<AbstractTab *>(sender());
+    if (tab != NULL) {
+      tab->appendMessage(QString("Unknown command: %1").arg(text));
+    }
   }
   else {
     emit commandReady(command);

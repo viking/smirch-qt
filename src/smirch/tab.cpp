@@ -12,9 +12,9 @@ Tab::Tab(Conversation *conversation, QWidget *parent)
   setupUi();
 }
 
-QTextEdit *Tab::textEdit() const
+QWebView *Tab::webView() const
 {
-  return m_ui.textEdit;
+  return m_ui.webView;
 }
 
 QLineEdit *Tab::lineEdit() const
@@ -26,4 +26,5 @@ void Tab::setupUi()
 {
   m_ui.setupUi(this);
   connect(m_ui.lineEdit, SIGNAL(returnPressed()), this, SLOT(handleInput()));
+  setFocusProxy(m_ui.lineEdit);
 }

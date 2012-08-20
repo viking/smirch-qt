@@ -13,7 +13,7 @@ class Tab : public AbstractTab
     Tab(Conversation *conversation, QWidget *parent = 0);
 
   protected:
-    QTextEdit *textEdit() const;
+    QWebView *webView() const;
     QLineEdit *lineEdit() const;
 
   private:
