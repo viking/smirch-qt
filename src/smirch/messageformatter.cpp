@@ -10,10 +10,6 @@ const QString MessageFormatter::s_disconnectedTemplate =
   QString("<div id=\"message-%1\" class=\"disconnected\"><span class=\"timestamp\">[%2]</span> Disconnected.</div>\n");
 const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
-const QString MessageFormatter::s_privateTemplate =
-  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;%3&gt; %4</div>\n");
-const QString MessageFormatter::s_actionTemplate =
-  QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
 const QString MessageFormatter::s_joinTemplate =
   QString("<div id=\"message-%1\" class=\"join\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has joined %6</div>\n");
 const QString MessageFormatter::s_numericTemplate =
@@ -22,10 +18,16 @@ const QString MessageFormatter::s_partTemplate =
   QString("<div id=\"message-%1\" class=\"part\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has left %6</div>\n");
 const QString MessageFormatter::s_partWithReasonTemplate =
   QString("<div id=\"message-%1\" class=\"part\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has left %6 (%7)</div>\n");
+const QString MessageFormatter::s_privateTemplate =
+  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;%3&gt; %4</div>\n");
+const QString MessageFormatter::s_actionTemplate =
+  QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
 const QString MessageFormatter::s_quitTemplate =
   QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit</div>\n");
 const QString MessageFormatter::s_quitWithReasonTemplate =
   QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit (%4)</div>\n");
+const QString MessageFormatter::s_capabilityTemplate =
+  QString("<div id=\"message-%1\" class=\"capability\"><span class=\"timestamp\">[%2]</span> Server capabilities: %3</div>\n");
 
 QString MessageFormatter::formatConnecting(int id, const QString &host)
 {
@@ -151,7 +153,8 @@ QString MessageFormatter::format(IrcTopicMessage *message, int id)
 
 QString MessageFormatter::format(IrcCapabilityMessage *message, int id)
 {
-  return(format((IrcMessage *) message, id));
+  return(s_capabilityTemplate.arg(id).arg(currentTimestamp()).
+      arg(message->capabilities().join(", ")));
 }
 
 QString MessageFormatter::currentTimestamp()

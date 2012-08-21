@@ -44,6 +44,7 @@ class MessageFormatter : public QObject
     static const QString s_actionTemplate;
     static const QString s_quitTemplate;
     static const QString s_quitWithReasonTemplate;
+    static const QString s_capabilityTemplate;
 };
 
 #endif
