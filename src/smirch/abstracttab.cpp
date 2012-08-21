@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include "abstracttab.h"
 #include "messageformatter.h"
+#include "session.h"
 #include <QtDebug>
 
 AbstractTab::AbstractTab(QWidget *parent)
@@ -57,17 +58,25 @@ QString AbstractTab::recipient() const
 
 void AbstractTab::connecting()
 {
-  appendMessage("Connecting...");
+  Session *session = qobject_cast<Session *>(QObject::sender());
+  if (session != NULL) {
+    appendMessage(MessageFormatter::formatConnecting(m_messageNumber++,
+          session->host()));
+  }
 }
 
 void AbstractTab::connected()
 {
-  appendMessage("Connected!");
+  Session *session = qobject_cast<Session *>(QObject::sender());
+  if (session != NULL) {
+    appendMessage(MessageFormatter::formatConnected(m_messageNumber++,
+          session->host()));
+  }
 }
 
 void AbstractTab::disconnected()
 {
-  appendMessage("Disconnected.");
+  appendMessage(MessageFormatter::formatDisconnected(m_messageNumber++));
 }
 
 void AbstractTab::unknownMessageReceived(IrcMessage *message)
@@ -161,7 +170,6 @@ void AbstractTab::appendMessage(QString text)
     internalAppendMessage(text);
   }
   else {
-    //qDebug() << "Page not loaded yet, appending:" << text;
     m_appendQueue << text;
     m_appendMutex.unlock();
   }

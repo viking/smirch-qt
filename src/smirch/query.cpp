@@ -5,7 +5,7 @@ Query::Query(Person *person, QObject *parent)
 {
 }
 
-const QString &Query::recipient() const
+QString Query::recipient() const
 {
   return m_person->name();
 }

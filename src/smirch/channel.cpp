@@ -12,7 +12,7 @@ const QString &Channel::name() const
   return m_name;
 }
 
-const QString &Channel::recipient() const
+QString Channel::recipient() const
 {
   return name();
 }

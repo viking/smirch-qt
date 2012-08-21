@@ -12,7 +12,7 @@ class Query : public Conversation
     Query(Person *person, QObject *parent = 0);
 
     Person *person() const;
-    const QString &recipient() const;
+    QString recipient() const;
 
   private:
     Person *m_person;

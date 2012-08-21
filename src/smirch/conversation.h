@@ -11,7 +11,7 @@ class Conversation : public QObject
   public:
     Conversation(QObject *parent = 0);
 
-    virtual const QString &recipient() const;
+    virtual QString recipient() const;
 
     virtual bool includes(IrcMessage *message);
     virtual bool includes(IrcErrorMessage *message);

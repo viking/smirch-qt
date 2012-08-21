@@ -2,10 +2,16 @@
 #include <QDateTime>
 #include "messageformatter.h"
 
+const QString MessageFormatter::s_connectingTemplate =
+  QString("<div id=\"message-%1\" class=\"connecting\"><span class=\"timestamp\">[%2]</span> Connecting to %3...</div>\n");
+const QString MessageFormatter::s_connectedTemplate =
+  QString("<div id=\"message-%1\" class=\"connected\"><span class=\"timestamp\">[%2]</span> Connected to %3.</div>\n");
+const QString MessageFormatter::s_disconnectedTemplate =
+  QString("<div id=\"message-%1\" class=\"disconnected\"><span class=\"timestamp\">[%2]</span> Disconnected.</div>\n");
 const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
 const QString MessageFormatter::s_messageTemplate =
-  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> <%3> %4</div>\n");
+  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;%3&gt; %4</div>\n");
 const QString MessageFormatter::s_actionTemplate =
   QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
 const QString MessageFormatter::s_joinTemplate =
@@ -20,6 +26,21 @@ const QString MessageFormatter::s_quitTemplate =
   QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit</div>\n");
 const QString MessageFormatter::s_quitWithReasonTemplate =
   QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit (%4)</div>\n");
+
+QString MessageFormatter::formatConnecting(int id, const QString &host)
+{
+  return(s_connectingTemplate.arg(id).arg(currentTimestamp()).arg(host));
+}
+
+QString MessageFormatter::formatConnected(int id, const QString &host)
+{
+  return(s_connectedTemplate.arg(id).arg(currentTimestamp()).arg(host));
+}
+
+QString MessageFormatter::formatDisconnected(int id)
+{
+  return(s_disconnectedTemplate.arg(id).arg(currentTimestamp()));
+}
 
 QString MessageFormatter::format(IrcMessage *message, int id)
 {
@@ -69,15 +90,13 @@ QString MessageFormatter::format(IrcNumericMessage *message, int id)
   QStringList parameters = message->parameters();
   parameters.removeFirst();
   return(s_numericTemplate.arg(id).arg(currentTimestamp()).
-      arg(message->code()).arg(parameters.join(" ")));
+      arg(message->code(), 3, 10, QLatin1Char('0')).
+      arg(parameters.join(" ")));
 }
 
 QString MessageFormatter::format(IrcPartMessage *message, int id)
 {
   IrcSender s = message->sender();
-  QString str = QString("* %1 (%2@%3) has left %4").
-      arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel());
-
   if (message->reason().isEmpty()) {
     return(s_partTemplate.arg(id).arg(currentTimestamp()).
         arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()));

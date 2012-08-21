@@ -3,8 +3,10 @@ body {
   font-size: 12pt;
   font-weight: 400;
   font-style: normal;
+  background: black;
 }
-div.message {
+div {
   padding-left: 1em;
   text-indent: -1em;
+  color: white;
 }

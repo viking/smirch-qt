@@ -14,7 +14,7 @@ class Channel : public Conversation
     Channel(const QString &name, QObject *parent = 0);
 
     const QString &name() const;
-    const QString &recipient() const;
+    QString recipient() const;
     const QStringList &nicks() const;
     NickListModel *nickListModel() const;
 

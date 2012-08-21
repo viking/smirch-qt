@@ -5,7 +5,7 @@ Conversation::Conversation(QObject *parent)
 {
 }
 
-const QString &Conversation::recipient() const
+QString Conversation::recipient() const
 {
   return QString();
 }
@@ -58,74 +58,76 @@ bool Conversation::includes(IrcMessage *message)
     case IrcMessage::Topic:
       return includes(static_cast<IrcTopicMessage *>(message));
   }
+
+  return false;
 }
 
-bool Conversation::includes(IrcErrorMessage *message)
+bool Conversation::includes(IrcErrorMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcInviteMessage *message)
+bool Conversation::includes(IrcInviteMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcJoinMessage *message)
+bool Conversation::includes(IrcJoinMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcKickMessage *message)
+bool Conversation::includes(IrcKickMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcModeMessage *message)
+bool Conversation::includes(IrcModeMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcNickMessage *message)
+bool Conversation::includes(IrcNickMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcNoticeMessage *message)
+bool Conversation::includes(IrcNoticeMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcNumericMessage *message)
+bool Conversation::includes(IrcNumericMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcPartMessage *message)
+bool Conversation::includes(IrcPartMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcPingMessage *message)
+bool Conversation::includes(IrcPingMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcPongMessage *message)
+bool Conversation::includes(IrcPongMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcPrivateMessage *message)
+bool Conversation::includes(IrcPrivateMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcQuitMessage *message)
+bool Conversation::includes(IrcQuitMessage *)
 {
   return false;
 }
 
-bool Conversation::includes(IrcTopicMessage *message)
+bool Conversation::includes(IrcTopicMessage *)
 {
   return false;
 }
