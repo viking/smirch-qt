@@ -66,6 +66,11 @@ bool Channel::includes(IrcPrivateMessage *message)
   return message->target() == m_name;
 }
 
+bool Channel::includes(IrcQuitMessage *message)
+{
+  return (m_nickListModel->indexOf(message->sender().name()) >= 0);
+}
+
 bool Channel::includes(IrcTopicMessage *message)
 {
   return message->channel() == m_name;
@@ -110,4 +115,13 @@ void Channel::handlePartMessage(IrcPartMessage *message)
   m_mutex.unlock();
 
   emit partMessageReceived(message);
+}
+
+void Channel::handleQuitMessage(IrcQuitMessage *message)
+{
+  m_mutex.lock();
+  m_nickListModel->removeNick(message->sender().name());
+  m_mutex.unlock();
+
+  emit quitMessageReceived(message);
 }

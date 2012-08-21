@@ -61,10 +61,20 @@ void Session::handleMessage(IrcMessage *message)
         }
         break;
 
+      case IrcMessage::Notice:
+        {
+          IrcNoticeMessage *m = static_cast<IrcNoticeMessage *>(message);
+          if (m->target() == nickName()) {
+            emit noticeMessageReceived(m);
+          }
+        }
+
       case IrcMessage::Capability:
         {
           IrcCapabilityMessage *m = static_cast<IrcCapabilityMessage *>(message);
-          emit serverCapabilityMessageReceived(m);
+          if (m->isValid() && !m->capabilities().isEmpty()) {
+            emit serverCapabilityMessageReceived(m);
+          }
         }
         break;
 

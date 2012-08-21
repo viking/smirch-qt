@@ -24,6 +24,9 @@ class AbstractTab : public QWidget
   signals:
     void inputReceived(const QString &target, const QString &text);
 
+  public slots:
+    void noticeMessageReceived(IrcNoticeMessage *message);
+
   protected slots:
     void on_webView_loadFinished(bool ok);
 
@@ -38,7 +41,6 @@ class AbstractTab : public QWidget
     void kickMessageReceived(IrcKickMessage *message);
     void modeMessageReceived(IrcModeMessage *message);
     void nickMessageReceived(IrcNickMessage *message);
-    void noticeMessageReceived(IrcNoticeMessage *message);
     void numericMessageReceived(IrcNumericMessage *message);
     void partMessageReceived(IrcPartMessage *message);
     void pingMessageReceived(IrcPingMessage *message);

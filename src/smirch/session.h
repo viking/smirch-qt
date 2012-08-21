@@ -23,6 +23,7 @@ class Session : public IrcSession
     void channelJoined(Channel *channel);
     void serverNumericMessageReceived(IrcNumericMessage *message);
     void serverCapabilityMessageReceived(IrcCapabilityMessage *message);
+    void noticeMessageReceived(IrcNoticeMessage *message);
 
   private slots:
     void handleMessage(IrcMessage *message);

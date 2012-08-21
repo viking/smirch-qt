@@ -58,10 +58,15 @@ void NickListModel::addNick(const QString &nick)
 
 void NickListModel::removeNick(const QString &nick)
 {
-  int i = m_list.indexOf(nick);
+  int i = indexOf(nick);
   if (i >= 0) {
     beginRemoveRows(QModelIndex(), i, i);
     m_list.removeAt(i);
     endRemoveRows();
   }
+}
+
+int NickListModel::indexOf(const QString &value, int from) const
+{
+  return m_list.indexOf(value, from);
 }

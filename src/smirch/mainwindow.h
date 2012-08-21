@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <IrcMessage>
 #include "ui_mainwindow.h"
 #include "abstracttab.h"
 #include "session.h"
@@ -23,6 +24,7 @@ class MainWindow : public QMainWindow
     void queryStarted(Query *query);
     void channelJoined(Channel *channel);
     void closeWindow();
+    void noticeMessageReceived(IrcNoticeMessage *message);
 
   private:
     Ui::MainWindow m_ui;

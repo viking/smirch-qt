@@ -37,6 +37,7 @@ class MessageFormatter : public QObject
     static const QString s_disconnectedTemplate;
     static const QString s_defaultTemplate;
     static const QString s_joinTemplate;
+    static const QString s_noticeTemplate;
     static const QString s_numericTemplate;
     static const QString s_partTemplate;
     static const QString s_partWithReasonTemplate;

@@ -65,6 +65,7 @@ void MainWindow::on_actionConnect_triggered()
         m_ui.serverTab, SLOT(numericMessageReceived(IrcNumericMessage *)));
     connect(m_session, SIGNAL(serverCapabilityMessageReceived(IrcCapabilityMessage *)),
         m_ui.serverTab, SLOT(capabilityMessageReceived(IrcCapabilityMessage *)));
+
     connect(m_session, SIGNAL(connecting()),
         m_ui.serverTab, SLOT(connecting()));
     connect(m_session, SIGNAL(connected()),
@@ -77,6 +78,9 @@ void MainWindow::on_actionConnect_triggered()
         this, SLOT(queryStarted(Query *)));
     connect(&inputHandler, SIGNAL(commandReady(IrcCommand *)),
         m_session, SLOT(handleCommand(IrcCommand *)));
+
+    connect(m_session, SIGNAL(noticeMessageReceived(IrcNoticeMessage *)),
+        this, SLOT(noticeMessageReceived(IrcNoticeMessage *)));
 
     m_session->open();
   }
@@ -105,6 +109,16 @@ void MainWindow::closeWindow()
   }
   QMainWindow::closeEvent(m_closeEvent);
 }
+
+void MainWindow::noticeMessageReceived(IrcNoticeMessage *message)
+{
+  AbstractTab *tab = qobject_cast<AbstractTab *>(m_ui.tabWidget->currentWidget());
+  if (tab == NULL) {
+    tab = (AbstractTab *) m_ui.serverTab;
+  }
+  tab->noticeMessageReceived(message);
+}
+
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)
 {

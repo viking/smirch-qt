@@ -17,6 +17,7 @@ class NickListModel : public QAbstractListModel
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     void addNick(const QString &nick);
     void removeNick(const QString &nick);
+    int indexOf(const QString &value, int from = 0) const;
 
   private:
     QStringList m_list;

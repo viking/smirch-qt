@@ -12,6 +12,8 @@ const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
 const QString MessageFormatter::s_joinTemplate =
   QString("<div id=\"message-%1\" class=\"join\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has joined %6</div>\n");
+const QString MessageFormatter::s_noticeTemplate =
+  QString("<div id=\"message-%1\" class=\"notice\"><span class=\"timestamp\">[%2]</span> -%3- %4</div>\n");
 const QString MessageFormatter::s_numericTemplate =
   QString("<div id=\"message-%1\" class=\"numeric\"><span class=\"timestamp\">[%2]</span> (%3) %4</div>\n");
 const QString MessageFormatter::s_partTemplate =
@@ -84,7 +86,9 @@ QString MessageFormatter::format(IrcNickMessage *message, int id)
 
 QString MessageFormatter::format(IrcNoticeMessage *message, int id)
 {
-  return(format((IrcMessage *) message, id));
+  return(s_noticeTemplate.arg(id).arg(currentTimestamp()).
+      arg(message->sender().name()).
+      arg(IrcUtil::messageToHtml(message->message())));
 }
 
 QString MessageFormatter::format(IrcNumericMessage *message, int id)

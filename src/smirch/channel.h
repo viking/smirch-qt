@@ -24,11 +24,13 @@ class Channel : public Conversation
     bool includes(IrcNumericMessage *message);
     bool includes(IrcPartMessage *message);
     bool includes(IrcPrivateMessage *message);
+    bool includes(IrcQuitMessage *message);
     bool includes(IrcTopicMessage *message);
 
     void handleNumericMessage(IrcNumericMessage *message);
     void handleJoinMessage(IrcJoinMessage *message);
     void handlePartMessage(IrcPartMessage *message);
+    void handleQuitMessage(IrcQuitMessage *message);
 
   private:
     QString m_name;
