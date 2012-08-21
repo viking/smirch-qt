@@ -2,6 +2,7 @@
 #include <IrcUtil>
 #include <QDateTime>
 #include "abstracttab.h"
+#include "messageformatter.h"
 #include <QtDebug>
 
 const QString AbstractTab::s_messageMarkup = QString("    <div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
@@ -73,113 +74,77 @@ void AbstractTab::disconnected()
 
 void AbstractTab::unknownMessageReceived(IrcMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::errorMessageReceived(IrcErrorMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::inviteMessageReceived(IrcInviteMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::joinMessageReceived(IrcJoinMessage *message)
 {
-  IrcSender s = message->sender();
-  appendMessage(QString("* %1 (%2@%3) has joined %4").
-      arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::kickMessageReceived(IrcKickMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::modeMessageReceived(IrcModeMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::nickMessageReceived(IrcNickMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::noticeMessageReceived(IrcNoticeMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::numericMessageReceived(IrcNumericMessage *message)
 {
-  QStringList parameters = message->parameters();
-  parameters.removeFirst();
-  appendMessage(QString("(%1) %2").arg(message->code()).
-      arg(parameters.join(" ")));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::partMessageReceived(IrcPartMessage *message)
 {
-  IrcSender s = message->sender();
-  QString str = QString("* %1 (%2@%3) has left %4").
-      arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel());
-
-  if (!message->reason().isEmpty()) {
-    str.append(QString(" (%1)").arg(message->reason()));
-  }
-
-  appendMessage(str);
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::pingMessageReceived(IrcPingMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::pongMessageReceived(IrcPongMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::privateMessageReceived(IrcPrivateMessage *message)
 {
-  if (message->isAction()) {
-    appendMessage(QString("* %1 %2").arg(message->sender().name()).
-        arg(IrcUtil::messageToHtml(message->message())));
-  }
-  else {
-    appendMessage(QString("<%1> %2").arg(message->sender().name()).
-        arg(IrcUtil::messageToHtml(message->message())));
-  }
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::quitMessageReceived(IrcQuitMessage *message)
 {
-  if (!message->reason().isEmpty()) {
-    appendMessage(QString("* %1 has quit (%2)").arg(message->sender().name()).
-        arg(message->reason()));
-  }
-  else {
-    appendMessage(QString("* %1 has quit").arg(message->sender().name()));
-  }
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
 {
-  QByteArray data = message->toData();
-  appendMessage(QString(data));
+  appendMessage(MessageFormatter::format(message));
 }
 
 void AbstractTab::handleInput()
@@ -204,6 +169,7 @@ void AbstractTab::appendMessage(QString text)
   }
 }
 
+// FIXME: use MessageFormatter for all markup
 void AbstractTab::internalAppendMessage(const QString &text)
 {
   QWebView *widget = webView();
