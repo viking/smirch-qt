@@ -28,6 +28,7 @@ class MessageFormatter : public QObject
     static QString format(IrcPrivateMessage *message, int id);
     static QString format(IrcQuitMessage *message, int id);
     static QString format(IrcTopicMessage *message, int id);
+    static QString format(IrcCapabilityMessage *message, int id);
 
     static QString currentTimestamp();
 
@@ -35,12 +36,12 @@ class MessageFormatter : public QObject
     static const QString s_connectedTemplate;
     static const QString s_disconnectedTemplate;
     static const QString s_defaultTemplate;
-    static const QString s_messageTemplate;
-    static const QString s_actionTemplate;
     static const QString s_joinTemplate;
     static const QString s_numericTemplate;
     static const QString s_partTemplate;
     static const QString s_partWithReasonTemplate;
+    static const QString s_privateTemplate;
+    static const QString s_actionTemplate;
     static const QString s_quitTemplate;
     static const QString s_quitWithReasonTemplate;
 };

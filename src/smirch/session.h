@@ -22,6 +22,7 @@ class Session : public IrcSession
     void queryStarted(Query *query);
     void channelJoined(Channel *channel);
     void serverNumericMessageReceived(IrcNumericMessage *message);
+    void serverCapabilityMessageReceived(IrcCapabilityMessage *message);
 
   private slots:
     void handleMessage(IrcMessage *message);

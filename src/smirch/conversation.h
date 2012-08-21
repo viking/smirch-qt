@@ -28,6 +28,7 @@ class Conversation : public QObject
     virtual bool includes(IrcPrivateMessage *message);
     virtual bool includes(IrcQuitMessage *message);
     virtual bool includes(IrcTopicMessage *message);
+    virtual bool includes(IrcCapabilityMessage *message);
 
     virtual void handleMessage(IrcMessage *message);
     virtual void handleUnknownMessage(IrcMessage *message);
@@ -45,6 +46,7 @@ class Conversation : public QObject
     virtual void handlePrivateMessage(IrcPrivateMessage *message);
     virtual void handleQuitMessage(IrcQuitMessage *message);
     virtual void handleTopicMessage(IrcTopicMessage *message);
+    virtual void handleCapabilityMessage(IrcCapabilityMessage *message);
 
   signals:
     void unknownMessageReceived(IrcMessage *message);
@@ -62,6 +64,7 @@ class Conversation : public QObject
     void privateMessageReceived(IrcPrivateMessage *message);
     void quitMessageReceived(IrcQuitMessage *message);
     void topicMessageReceived(IrcTopicMessage *message);
+    void capabilityMessageReceived(IrcCapabilityMessage *message);
 };
 
 #endif

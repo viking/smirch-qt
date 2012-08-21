@@ -63,6 +63,8 @@ void MainWindow::on_actionConnect_triggered()
 
     connect(m_session, SIGNAL(serverNumericMessageReceived(IrcNumericMessage *)),
         m_ui.serverTab, SLOT(numericMessageReceived(IrcNumericMessage *)));
+    connect(m_session, SIGNAL(serverCapabilityMessageReceived(IrcCapabilityMessage *)),
+        m_ui.serverTab, SLOT(capabilityMessageReceived(IrcCapabilityMessage *)));
     connect(m_session, SIGNAL(connecting()),
         m_ui.serverTab, SLOT(connecting()));
     connect(m_session, SIGNAL(connected()),

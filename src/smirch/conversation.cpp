@@ -57,6 +57,9 @@ bool Conversation::includes(IrcMessage *message)
 
     case IrcMessage::Topic:
       return includes(static_cast<IrcTopicMessage *>(message));
+
+    case IrcMessage::Capability:
+      return includes(static_cast<IrcCapabilityMessage *>(message));
   }
 
   return false;
@@ -132,6 +135,11 @@ bool Conversation::includes(IrcTopicMessage *)
   return false;
 }
 
+bool Conversation::includes(IrcCapabilityMessage *)
+{
+  return false;
+}
+
 void Conversation::handleMessage(IrcMessage *message)
 {
   switch (message->type()) {
@@ -193,6 +201,10 @@ void Conversation::handleMessage(IrcMessage *message)
 
     case IrcMessage::Topic:
       handleTopicMessage(static_cast<IrcTopicMessage *>(message));
+      break;
+
+    case IrcMessage::Capability:
+      handleCapabilityMessage(static_cast<IrcCapabilityMessage *>(message));
       break;
   }
 }
@@ -270,4 +282,9 @@ void Conversation::handleQuitMessage(IrcQuitMessage *message)
 void Conversation::handleTopicMessage(IrcTopicMessage *message)
 {
   emit topicMessageReceived(message);
+}
+
+void Conversation::handleCapabilityMessage(IrcCapabilityMessage *message)
+{
+  emit capabilityMessageReceived(message);
 }

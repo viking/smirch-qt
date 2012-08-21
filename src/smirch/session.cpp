@@ -61,6 +61,13 @@ void Session::handleMessage(IrcMessage *message)
         }
         break;
 
+      case IrcMessage::Capability:
+        {
+          IrcCapabilityMessage *m = static_cast<IrcCapabilityMessage *>(message);
+          emit serverCapabilityMessageReceived(m);
+        }
+        break;
+
       default:
         break;
     }

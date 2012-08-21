@@ -44,6 +44,8 @@ AbstractTab::AbstractTab(Conversation *conversation, QWidget *parent)
       this, SLOT(quitMessageReceived(IrcQuitMessage *)));
   connect(m_conversation, SIGNAL(topicMessageReceived(IrcTopicMessage *)),
       this, SLOT(topicMessageReceived(IrcTopicMessage *)));
+  connect(m_conversation, SIGNAL(capabilityMessageReceived(IrcCapabilityMessage *)),
+      this, SLOT(capabilityMessageReceived(IrcCapabilityMessage *)));
 }
 
 QString AbstractTab::recipient() const
@@ -150,6 +152,11 @@ void AbstractTab::quitMessageReceived(IrcQuitMessage *message)
 }
 
 void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
+{
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
+}
+
+void AbstractTab::capabilityMessageReceived(IrcCapabilityMessage *message)
 {
   appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }

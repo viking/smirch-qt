@@ -46,6 +46,7 @@ class AbstractTab : public QWidget
     void privateMessageReceived(IrcPrivateMessage *message);
     void quitMessageReceived(IrcQuitMessage *message);
     void topicMessageReceived(IrcTopicMessage *message);
+    void capabilityMessageReceived(IrcCapabilityMessage *message);
 
     void handleInput();
 

@@ -10,7 +10,7 @@ const QString MessageFormatter::s_disconnectedTemplate =
   QString("<div id=\"message-%1\" class=\"disconnected\"><span class=\"timestamp\">[%2]</span> Disconnected.</div>\n");
 const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
-const QString MessageFormatter::s_messageTemplate =
+const QString MessageFormatter::s_privateTemplate =
   QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;%3&gt; %4</div>\n");
 const QString MessageFormatter::s_actionTemplate =
   QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
@@ -126,7 +126,7 @@ QString MessageFormatter::format(IrcPrivateMessage *message, int id)
         arg(IrcUtil::messageToHtml(message->message())));
   }
   else {
-    return(s_messageTemplate.arg(id).arg(currentTimestamp()).
+    return(s_privateTemplate.arg(id).arg(currentTimestamp()).
         arg(message->sender().name()).
         arg(IrcUtil::messageToHtml(message->message())));
   }
@@ -145,6 +145,11 @@ QString MessageFormatter::format(IrcQuitMessage *message, int id)
 }
 
 QString MessageFormatter::format(IrcTopicMessage *message, int id)
+{
+  return(format((IrcMessage *) message, id));
+}
+
+QString MessageFormatter::format(IrcCapabilityMessage *message, int id)
 {
   return(format((IrcMessage *) message, id));
 }
