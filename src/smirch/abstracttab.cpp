@@ -5,8 +5,6 @@
 #include "messageformatter.h"
 #include <QtDebug>
 
-const QString AbstractTab::s_messageMarkup = QString("    <div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
-
 AbstractTab::AbstractTab(QWidget *parent)
   : QWidget(parent), m_conversation(NULL), m_pageLoaded(false), m_messageNumber(1)
 {
@@ -74,77 +72,77 @@ void AbstractTab::disconnected()
 
 void AbstractTab::unknownMessageReceived(IrcMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::errorMessageReceived(IrcErrorMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::inviteMessageReceived(IrcInviteMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::joinMessageReceived(IrcJoinMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::kickMessageReceived(IrcKickMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::modeMessageReceived(IrcModeMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::nickMessageReceived(IrcNickMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::noticeMessageReceived(IrcNoticeMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::numericMessageReceived(IrcNumericMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::partMessageReceived(IrcPartMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::pingMessageReceived(IrcPingMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::pongMessageReceived(IrcPongMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::privateMessageReceived(IrcPrivateMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::quitMessageReceived(IrcQuitMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
 {
-  appendMessage(MessageFormatter::format(message));
+  appendMessage(MessageFormatter::format(message, m_messageNumber++));
 }
 
 void AbstractTab::handleInput()
@@ -169,7 +167,6 @@ void AbstractTab::appendMessage(QString text)
   }
 }
 
-// FIXME: use MessageFormatter for all markup
 void AbstractTab::internalAppendMessage(const QString &text)
 {
   QWebView *widget = webView();
@@ -178,9 +175,7 @@ void AbstractTab::internalAppendMessage(const QString &text)
     m_body = frame->findFirstElement("body");
   }
 
-  m_body.appendInside(s_messageMarkup.arg(m_messageNumber++).
-      arg(QDateTime::currentDateTime().toString("hh:mm")).
-      arg(text));
+  m_body.appendInside(text);
   QWebElement element = m_body.lastChild();
   frame->scrollToAnchor(element.attribute("id"));
 }

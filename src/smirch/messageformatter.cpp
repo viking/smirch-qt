@@ -1,113 +1,136 @@
 #include <IrcUtil>
+#include <QDateTime>
 #include "messageformatter.h"
 
-QString MessageFormatter::format(IrcMessage *message)
+const QString MessageFormatter::s_defaultTemplate =
+  QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
+const QString MessageFormatter::s_messageTemplate =
+  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> <%3> %4</div>\n");
+const QString MessageFormatter::s_actionTemplate =
+  QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
+const QString MessageFormatter::s_joinTemplate =
+  QString("<div id=\"message-%1\" class=\"join\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has joined %6</div>\n");
+const QString MessageFormatter::s_numericTemplate =
+  QString("<div id=\"message-%1\" class=\"numeric\"><span class=\"timestamp\">[%2]</span> (%3) %4</div>\n");
+const QString MessageFormatter::s_partTemplate =
+  QString("<div id=\"message-%1\" class=\"part\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has left %6</div>\n");
+const QString MessageFormatter::s_partWithReasonTemplate =
+  QString("<div id=\"message-%1\" class=\"part\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has left %6 (%7)</div>\n");
+const QString MessageFormatter::s_quitTemplate =
+  QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit</div>\n");
+const QString MessageFormatter::s_quitWithReasonTemplate =
+  QString("<div id=\"message-%1\" class=\"quit\"><span class=\"timestamp\">[%2]</span> * %3 has quit (%4)</div>\n");
+
+QString MessageFormatter::format(IrcMessage *message, int id)
 {
   QByteArray data = message->toData();
-  return(QString(data));
+  return(s_defaultTemplate.arg(id).arg(currentTimestamp()).arg(QString(data)));
 }
 
-QString MessageFormatter::format(IrcErrorMessage *message)
+QString MessageFormatter::format(IrcErrorMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcInviteMessage *message)
+QString MessageFormatter::format(IrcInviteMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcJoinMessage *message)
+QString MessageFormatter::format(IrcJoinMessage *message, int id)
 {
   IrcSender s = message->sender();
-  return(QString("* %1 (%2@%3) has joined %4").
+  return(s_joinTemplate.arg(id).arg(currentTimestamp()).
       arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()));
 }
 
-QString MessageFormatter::format(IrcKickMessage *message)
+QString MessageFormatter::format(IrcKickMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcModeMessage *message)
+QString MessageFormatter::format(IrcModeMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcNickMessage *message)
+QString MessageFormatter::format(IrcNickMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcNoticeMessage *message)
+QString MessageFormatter::format(IrcNoticeMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcNumericMessage *message)
+QString MessageFormatter::format(IrcNumericMessage *message, int id)
 {
   QStringList parameters = message->parameters();
   parameters.removeFirst();
-  return(QString("(%1) %2").arg(message->code()).
-      arg(parameters.join(" ")));
+  return(s_numericTemplate.arg(id).arg(currentTimestamp()).
+      arg(message->code()).arg(parameters.join(" ")));
 }
 
-QString MessageFormatter::format(IrcPartMessage *message)
+QString MessageFormatter::format(IrcPartMessage *message, int id)
 {
   IrcSender s = message->sender();
   QString str = QString("* %1 (%2@%3) has left %4").
       arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel());
 
-  if (!message->reason().isEmpty()) {
-    str.append(QString(" (%1)").arg(message->reason()));
+  if (message->reason().isEmpty()) {
+    return(s_partTemplate.arg(id).arg(currentTimestamp()).
+        arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()));
   }
-
-  return(str);
+  else {
+    return(s_partWithReasonTemplate.arg(id).arg(currentTimestamp()).
+        arg(s.name()).arg(s.user()).arg(s.host()).arg(message->channel()).
+        arg(message->reason()));;
+  }
 }
 
-QString MessageFormatter::format(IrcPingMessage *message)
+QString MessageFormatter::format(IrcPingMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcPongMessage *message)
+QString MessageFormatter::format(IrcPongMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
 }
 
-QString MessageFormatter::format(IrcPrivateMessage *message)
+QString MessageFormatter::format(IrcPrivateMessage *message, int id)
 {
   if (message->isAction()) {
-    return(QString("* %1 %2").arg(message->sender().name()).
+    return(s_actionTemplate.arg(id).arg(currentTimestamp()).
+        arg(message->sender().name()).
         arg(IrcUtil::messageToHtml(message->message())));
   }
   else {
-    return(QString("<%1> %2").arg(message->sender().name()).
+    return(s_messageTemplate.arg(id).arg(currentTimestamp()).
+        arg(message->sender().name()).
         arg(IrcUtil::messageToHtml(message->message())));
   }
 }
 
-QString MessageFormatter::format(IrcQuitMessage *message)
+QString MessageFormatter::format(IrcQuitMessage *message, int id)
 {
-  if (!message->reason().isEmpty()) {
-    return(QString("* %1 has quit (%2)").arg(message->sender().name()).
-        arg(message->reason()));
+  if (message->reason().isEmpty()) {
+    return(s_quitTemplate.arg(id).arg(currentTimestamp()).
+        arg(message->sender().name()));
   }
   else {
-    return(QString("* %1 has quit").arg(message->sender().name()));
+    return(s_quitWithReasonTemplate.arg(id).arg(currentTimestamp()).
+        arg(message->sender().name()).arg(message->reason()));
   }
 }
 
-QString MessageFormatter::format(IrcTopicMessage *message)
+QString MessageFormatter::format(IrcTopicMessage *message, int id)
 {
-  QByteArray data = message->toData();
-  return(QString(data));
+  return(format((IrcMessage *) message, id));
+}
+
+QString MessageFormatter::currentTimestamp()
+{
+  return QDateTime::currentDateTime().toString("hh:mm");
 }

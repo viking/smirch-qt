@@ -58,7 +58,6 @@ class AbstractTab : public QWidget
     virtual QLineEdit *lineEdit() const = 0;
 
   private:
-    static const QString s_messageMarkup;
     int m_messageNumber;
     QStringList m_appendQueue;
     QMutex m_appendMutex;
