@@ -49,7 +49,8 @@ QString MessageFormatter::formatDisconnected(int id)
 QString MessageFormatter::format(IrcMessage *message, int id)
 {
   QByteArray data = message->toData();
-  return(s_defaultTemplate.arg(id).arg(currentTimestamp()).arg(QString(data)));
+  return(s_defaultTemplate.arg(id).arg(currentTimestamp()).
+      arg(IrcUtil::messageToHtml(data)));
 }
 
 QString MessageFormatter::format(IrcErrorMessage *message, int id)
@@ -97,7 +98,7 @@ QString MessageFormatter::format(IrcNumericMessage *message, int id)
   parameters.removeFirst();
   return(s_numericTemplate.arg(id).arg(currentTimestamp()).
       arg(message->code(), 3, 10, QLatin1Char('0')).
-      arg(parameters.join(" ")));
+      arg(IrcUtil::messageToHtml(parameters.join(" "))));
 }
 
 QString MessageFormatter::format(IrcPartMessage *message, int id)

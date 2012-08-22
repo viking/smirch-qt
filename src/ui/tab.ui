@@ -27,7 +27,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QWebView" name="webView">
+       <widget class="WebView" name="webView">
         <property name="url">
          <url>
           <string>qrc:/tab.html</string>
@@ -48,6 +48,11 @@
    <class>QWebView</class>
    <extends>QWidget</extends>
    <header>QtWebKit/QWebView</header>
+  </customwidget>
+  <customwidget>
+   <class>WebView</class>
+   <extends>QWebView</extends>
+   <header>webview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

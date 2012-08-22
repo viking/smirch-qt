@@ -4,15 +4,22 @@ body {
   font-weight: 400;
   font-style: normal;
   background: black;
+  color: white;
 }
 div {
   padding-left: 1em;
   text-indent: -1em;
-  color: white;
 }
 div.join {
   color: green;
 }
 div.part, div.quit {
   color: brown;
+}
+a, a:visited {
+  color: rgb(0, 255, 255);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }

@@ -12,7 +12,8 @@ class InputHandler : public QObject
     InputHandler(QObject *parent = 0);
 
   signals:
-    void commandReady(IrcCommand *command);
+    void ircCommandReceived(IrcCommand *command);
+    void echoCommandReceived(const QString &text);
 
   public slots:
     void handleInput(const QString &target, const QString &text);

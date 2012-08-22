@@ -20,6 +20,10 @@ void InputHandler::handleInput(const QString &target, const QString &text)
     else if (commandName == "quit") {
       command = IrcCommand::createQuit(predicate);
     }
+    else if (commandName == "echo") {
+      emit echoCommandReceived(predicate);
+      return;
+    }
   }
   else if (!target.isEmpty()) {
     command = IrcCommand::createMessage(target, text);
@@ -32,6 +36,6 @@ void InputHandler::handleInput(const QString &target, const QString &text)
     }
   }
   else {
-    emit commandReady(command);
+    emit ircCommandReceived(command);
   }
 }

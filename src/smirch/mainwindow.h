@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow
     void channelJoined(Channel *channel);
     void closeWindow();
     void noticeMessageReceived(IrcNoticeMessage *message);
+    void appendMessageToCurrentTab(const QString &text);
 
   private:
     Ui::MainWindow m_ui;
@@ -34,6 +35,7 @@ class MainWindow : public QMainWindow
     InputHandler inputHandler;
 
     void addTab(AbstractTab *tab, const QString &name);
+    AbstractTab *currentTab();
     void closeSession();
 };
 

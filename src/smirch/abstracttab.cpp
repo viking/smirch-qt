@@ -191,8 +191,10 @@ void AbstractTab::internalAppendMessage(const QString &text)
   }
 
   m_body.appendInside(text);
-  QWebElement element = m_body.lastChild();
-  frame->scrollToAnchor(element.attribute("id"));
+  QString elementId = m_body.lastChild().attribute("id");
+  if (!elementId.isEmpty()) {
+    frame->scrollToAnchor(elementId);
+  }
 }
 
 void AbstractTab::on_webView_loadFinished(bool ok)

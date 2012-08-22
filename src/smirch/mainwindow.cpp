@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
   m_ui.serverTab->setFocus();
   connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
       &inputHandler, SLOT(handleInput(const QString &, const QString &)));
+  connect(&inputHandler, SIGNAL(echoCommandReceived(const QString &)),
+      this, SLOT(appendMessageToCurrentTab(const QString &)));
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
@@ -76,7 +78,8 @@ void MainWindow::on_actionConnect_triggered()
         this, SLOT(channelJoined(Channel *)));
     connect(m_session, SIGNAL(queryStarted(Query *)),
         this, SLOT(queryStarted(Query *)));
-    connect(&inputHandler, SIGNAL(commandReady(IrcCommand *)),
+
+    connect(&inputHandler, SIGNAL(ircCommandReceived(IrcCommand *)),
         m_session, SLOT(handleCommand(IrcCommand *)));
 
     connect(m_session, SIGNAL(noticeMessageReceived(IrcNoticeMessage *)),
@@ -112,13 +115,20 @@ void MainWindow::closeWindow()
 
 void MainWindow::noticeMessageReceived(IrcNoticeMessage *message)
 {
-  AbstractTab *tab = qobject_cast<AbstractTab *>(m_ui.tabWidget->currentWidget());
+  AbstractTab *tab = currentTab();
   if (tab == NULL) {
     tab = (AbstractTab *) m_ui.serverTab;
   }
   tab->noticeMessageReceived(message);
 }
 
+void MainWindow::appendMessageToCurrentTab(const QString &text)
+{
+  AbstractTab *tab = currentTab();
+  if (tab != NULL) {
+    tab->appendMessage(text);
+  }
+}
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)
 {
@@ -133,4 +143,9 @@ void MainWindow::addTab(AbstractTab *tab, const QString &name)
 
   m_ui.tabWidget->addTab(tab, name);
   m_ui.tabWidget->setCurrentIndex(m_ui.tabWidget->count() - 1);
+}
+
+AbstractTab *MainWindow::currentTab()
+{
+  return qobject_cast<AbstractTab *>(m_ui.tabWidget->currentWidget());
 }
