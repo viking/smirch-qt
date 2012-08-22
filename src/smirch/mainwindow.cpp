@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
       &inputHandler, SLOT(handleInput(const QString &, const QString &)));
   connect(&inputHandler, SIGNAL(echoCommandReceived(const QString &)),
-      this, SLOT(appendMessageToCurrentTab(const QString &)));
+      this, SLOT(echoCommandReceived(const QString &)));
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
@@ -122,12 +122,13 @@ void MainWindow::noticeMessageReceived(IrcNoticeMessage *message)
   tab->noticeMessageReceived(message);
 }
 
-void MainWindow::appendMessageToCurrentTab(const QString &text)
+void MainWindow::echoCommandReceived(const QString &text)
 {
   AbstractTab *tab = currentTab();
-  if (tab != NULL) {
-    tab->appendMessage(text);
+  if (tab == NULL) {
+    tab = (AbstractTab *) m_ui.serverTab;
   }
+  tab->echoReceived(text);
 }
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)

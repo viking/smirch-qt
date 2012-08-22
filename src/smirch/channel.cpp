@@ -61,11 +61,6 @@ bool Channel::includes(IrcPartMessage *message)
   return message->channel() == m_name;
 }
 
-bool Channel::includes(IrcPrivateMessage *message)
-{
-  return message->target() == m_name;
-}
-
 bool Channel::includes(IrcQuitMessage *message)
 {
   return (m_nickListModel->indexOf(message->sender().name()) >= 0);

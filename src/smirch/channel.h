@@ -23,7 +23,6 @@ class Channel : public Conversation
     bool includes(IrcModeMessage *message);
     bool includes(IrcNumericMessage *message);
     bool includes(IrcPartMessage *message);
-    bool includes(IrcPrivateMessage *message);
     bool includes(IrcQuitMessage *message);
     bool includes(IrcTopicMessage *message);
 

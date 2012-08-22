@@ -26,6 +26,7 @@ class AbstractTab : public QWidget
 
   public slots:
     void noticeMessageReceived(IrcNoticeMessage *message);
+    void echoReceived(const QString &text);
 
   protected slots:
     void on_webView_loadFinished(bool ok);

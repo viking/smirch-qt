@@ -13,6 +13,10 @@ Person::Person(const IrcSender &sender, QObject *parent)
   m_host = sender.host();
 }
 
+Person::Person(const QString &name, QObject *parent)
+  : QObject(parent), m_name(name)
+{
+}
 
 bool Person::operator==(const Person &person)
 {

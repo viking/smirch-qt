@@ -8,6 +8,8 @@ const QString MessageFormatter::s_connectedTemplate =
   QString("<div id=\"message-%1\" class=\"connected\"><span class=\"timestamp\">[%2]</span> Connected to %3.</div>\n");
 const QString MessageFormatter::s_disconnectedTemplate =
   QString("<div id=\"message-%1\" class=\"disconnected\"><span class=\"timestamp\">[%2]</span> Disconnected.</div>\n");
+const QString MessageFormatter::s_echoTemplate =
+  QString("<div id=\"message-%1\" class=\"echo\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
 const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
 const QString MessageFormatter::s_joinTemplate =
@@ -44,6 +46,11 @@ QString MessageFormatter::formatConnected(int id, const QString &host)
 QString MessageFormatter::formatDisconnected(int id)
 {
   return(s_disconnectedTemplate.arg(id).arg(currentTimestamp()));
+}
+
+QString MessageFormatter::formatEcho(int id, const QString &text)
+{
+  return(s_echoTemplate.arg(id).arg(currentTimestamp()).arg(text));
 }
 
 QString MessageFormatter::format(IrcMessage *message, int id)

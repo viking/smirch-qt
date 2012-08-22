@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     void channelJoined(Channel *channel);
     void closeWindow();
     void noticeMessageReceived(IrcNoticeMessage *message);
-    void appendMessageToCurrentTab(const QString &text);
+    void echoCommandReceived(const QString &text);
 
   private:
     Ui::MainWindow m_ui;

@@ -12,6 +12,7 @@ class Person : public QObject
   public:
     Person(QObject *parent = 0);
     Person(const IrcSender &sender, QObject *parent = 0);
+    Person(const QString &name, QObject *parent = 0);
 
     bool operator==(const Person &person);
 

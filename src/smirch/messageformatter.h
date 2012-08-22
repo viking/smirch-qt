@@ -12,6 +12,7 @@ class MessageFormatter : public QObject
     static QString formatConnecting(int id, const QString &host);
     static QString formatConnected(int id, const QString &host);
     static QString formatDisconnected(int id);
+    static QString formatEcho(int id, const QString &text);
 
     static QString format(IrcMessage *message, int id);
     static QString format(IrcErrorMessage *message, int id);
@@ -35,6 +36,8 @@ class MessageFormatter : public QObject
     static const QString s_connectingTemplate;
     static const QString s_connectedTemplate;
     static const QString s_disconnectedTemplate;
+    static const QString s_echoTemplate;
+
     static const QString s_defaultTemplate;
     static const QString s_joinTemplate;
     static const QString s_noticeTemplate;

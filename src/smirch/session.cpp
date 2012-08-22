@@ -50,7 +50,13 @@ void Session::handleMessage(IrcMessage *message)
       case IrcMessage::Private:
         {
           IrcPrivateMessage *m = static_cast<IrcPrivateMessage *>(message);
-          Person *person = new Person(m->sender(), this);
+          Person *person = NULL;
+          if (m->isOwn()) {
+            person = new Person(m->target(), this);
+          }
+          else {
+            person = new Person(m->sender(), this);
+          }
 
           m_mutex.lock();
           Query *query = createQuery(person);
@@ -92,7 +98,7 @@ void Session::handleCommand(IrcCommand *command)
 {
   IrcMessage *message = NULL;
   if (command->type() == IrcCommand::Message) {
-    message = IrcMessage::fromCommand(nickName(), command);
+    message = IrcMessage::fromCommand(nickName(), command, this);
   }
 
   if (sendCommand(command)) {

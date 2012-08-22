@@ -58,6 +58,24 @@ QString AbstractTab::recipient() const
   }
 }
 
+void AbstractTab::appendMessage(QString text)
+{
+  m_appendMutex.lock();
+  if (m_pageLoaded) {
+    m_appendMutex.unlock();
+    internalAppendMessage(text);
+  }
+  else {
+    m_appendQueue << text;
+    m_appendMutex.unlock();
+  }
+}
+
+void AbstractTab::echoReceived(const QString &text)
+{
+  appendMessage(MessageFormatter::formatEcho(m_messageNumber++, text));
+}
+
 void AbstractTab::connecting()
 {
   Session *session = qobject_cast<Session *>(QObject::sender());
@@ -167,19 +185,6 @@ void AbstractTab::handleInput()
   QString text = widget->text();
   emit inputReceived(recipient(), text);
   widget->clear();
-}
-
-void AbstractTab::appendMessage(QString text)
-{
-  m_appendMutex.lock();
-  if (m_pageLoaded) {
-    m_appendMutex.unlock();
-    internalAppendMessage(text);
-  }
-  else {
-    m_appendQueue << text;
-    m_appendMutex.unlock();
-  }
 }
 
 void AbstractTab::internalAppendMessage(const QString &text)

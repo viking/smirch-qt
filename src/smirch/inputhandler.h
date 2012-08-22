@@ -17,6 +17,9 @@ class InputHandler : public QObject
 
   public slots:
     void handleInput(const QString &target, const QString &text);
+
+  private:
+    static const QRegExp s_spacesPattern;
 };
 
 #endif

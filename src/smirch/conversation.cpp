@@ -120,9 +120,9 @@ bool Conversation::includes(IrcPongMessage *)
   return false;
 }
 
-bool Conversation::includes(IrcPrivateMessage *)
+bool Conversation::includes(IrcPrivateMessage *message)
 {
-  return false;
+  return message->target() == recipient() || message->sender().name() == recipient();
 }
 
 bool Conversation::includes(IrcQuitMessage *)
