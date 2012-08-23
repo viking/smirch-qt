@@ -25,6 +25,6 @@ QLineEdit *Tab::lineEdit() const
 void Tab::setupUi()
 {
   m_ui.setupUi(this);
-  connect(m_ui.lineEdit, SIGNAL(returnPressed()), this, SLOT(handleInput()));
+  setupLineEdit();
   setFocusProxy(m_ui.lineEdit);
 }

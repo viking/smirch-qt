@@ -53,18 +53,24 @@ class AbstractTab : public QWidget
 
     void handleInput();
 
+    void rollbackLineEdit();
+    void advanceLineEdit();
+
   protected:
     Conversation *m_conversation;
     QWebElement m_body;
     bool m_pageLoaded;
+    int m_lineEditPosition;
 
     virtual QWebView *webView() const = 0;
     virtual QLineEdit *lineEdit() const = 0;
+    void setupLineEdit();
 
   private:
     int m_messageNumber;
     QStringList m_appendQueue;
     QMutex m_appendMutex;
+    QStringList m_lineEditHistory;
 
     void internalAppendMessage(const QString &text);
 };

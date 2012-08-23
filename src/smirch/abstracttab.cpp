@@ -1,6 +1,7 @@
 #include <IrcCommand>
 #include <IrcUtil>
 #include <QDateTime>
+#include <QShortcut>
 #include "abstracttab.h"
 #include "messageformatter.h"
 #include "session.h"
@@ -74,6 +75,17 @@ void AbstractTab::appendMessage(QString text)
 void AbstractTab::echoReceived(const QString &text)
 {
   appendMessage(MessageFormatter::formatEcho(m_messageNumber++, text));
+}
+
+void AbstractTab::on_webView_loadFinished(bool ok)
+{
+  m_appendMutex.lock();
+  m_pageLoaded = true;
+  for (int i = 0; i < m_appendQueue.count(); i++) {
+    internalAppendMessage(m_appendQueue.at(i));
+  }
+  m_appendQueue.clear();
+  m_appendMutex.unlock();
 }
 
 void AbstractTab::connecting()
@@ -184,7 +196,47 @@ void AbstractTab::handleInput()
   QLineEdit *widget = lineEdit();
   QString text = widget->text();
   emit inputReceived(recipient(), text);
+  m_lineEditHistory << text;
   widget->clear();
+  m_lineEditPosition = 0;
+}
+
+// FIXME: save any currently entered text?
+void AbstractTab::rollbackLineEdit()
+{
+  QLineEdit *widget = lineEdit();
+  if (widget->text().isEmpty()) {
+    m_lineEditPosition = 0;
+  }
+  int newIndex = m_lineEditHistory.count() + m_lineEditPosition - 1;
+  if (newIndex >= 0) {
+    widget->setText(m_lineEditHistory[newIndex]);
+    m_lineEditPosition--;
+  }
+}
+
+void AbstractTab::advanceLineEdit()
+{
+  QLineEdit *widget = lineEdit();
+  if (widget->text().isEmpty()) {
+    m_lineEditPosition = 0;
+  }
+  int newIndex = m_lineEditHistory.count() + m_lineEditPosition + 1;
+  if (newIndex < m_lineEditHistory.count()) {
+    widget->setText(m_lineEditHistory[newIndex]);
+    m_lineEditPosition++;
+  }
+}
+
+void AbstractTab::setupLineEdit()
+{
+  QLineEdit *widget = lineEdit();
+  connect(widget, SIGNAL(returnPressed()), this, SLOT(handleInput()));
+
+  QShortcut *upShortcut = new QShortcut(QKeySequence("Up"), widget);
+  QShortcut *downShortcut = new QShortcut(QKeySequence("Down"), widget);
+  connect(upShortcut, SIGNAL(activated()), this, SLOT(rollbackLineEdit()));
+  connect(downShortcut, SIGNAL(activated()), this, SLOT(advanceLineEdit()));
 }
 
 void AbstractTab::internalAppendMessage(const QString &text)
@@ -200,15 +252,4 @@ void AbstractTab::internalAppendMessage(const QString &text)
   if (!elementId.isEmpty()) {
     frame->scrollToAnchor(elementId);
   }
-}
-
-void AbstractTab::on_webView_loadFinished(bool ok)
-{
-  m_appendMutex.lock();
-  m_pageLoaded = true;
-  for (int i = 0; i < m_appendQueue.count(); i++) {
-    internalAppendMessage(m_appendQueue.at(i));
-  }
-  m_appendQueue.clear();
-  m_appendMutex.unlock();
 }

@@ -21,7 +21,7 @@ QLineEdit *ChannelTab::lineEdit() const
 void ChannelTab::setupUi()
 {
   m_ui.setupUi(this);
+  setupLineEdit();
   m_ui.nicks->setModel(static_cast<Channel *>(m_conversation)->nickListModel());
-  connect(m_ui.lineEdit, SIGNAL(returnPressed()), this, SLOT(handleInput()));
   setFocusProxy(m_ui.lineEdit);
 }
