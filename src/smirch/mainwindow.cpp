@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent), m_session(NULL), m_closeEvent(NULL)
 {
   m_ui.setupUi(this);
-  m_ui.serverTab->setFocus();
+
   connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
       &inputHandler, SLOT(handleInput(const QString &, const QString &)));
   connect(&inputHandler, SIGNAL(echoCommandReceived(const QString &)),
@@ -20,6 +20,31 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
+
+  m_nextTabShortcut = new QShortcut(QKeySequence("Ctrl+PgDown"), this);
+  m_previousTabShortcut = new QShortcut(QKeySequence("Ctrl+PgUp"), this);
+  m_firstTabShortcut = new QShortcut(QKeySequence("Alt+1"), this);
+  m_secondTabShortcut = new QShortcut(QKeySequence("Alt+2"), this);
+  m_thirdTabShortcut = new QShortcut(QKeySequence("Alt+3"), this);
+  m_fourthTabShortcut = new QShortcut(QKeySequence("Alt+4"), this);
+  m_fifthTabShortcut = new QShortcut(QKeySequence("Alt+5"), this);
+  m_sixthTabShortcut = new QShortcut(QKeySequence("Alt+6"), this);
+  m_seventhTabShortcut = new QShortcut(QKeySequence("Alt+7"), this);
+  m_eighthTabShortcut = new QShortcut(QKeySequence("Alt+8"), this);
+  m_ninthTabShortcut = new QShortcut(QKeySequence("Alt+9"), this);
+  connect(m_nextTabShortcut, SIGNAL(activated()), this, SLOT(selectNextTab()));
+  connect(m_previousTabShortcut, SIGNAL(activated()), this, SLOT(selectPreviousTab()));
+  connect(m_firstTabShortcut, SIGNAL(activated()), this, SLOT(selectFirstTab()));
+  connect(m_secondTabShortcut, SIGNAL(activated()), this, SLOT(selectSecondTab()));
+  connect(m_thirdTabShortcut, SIGNAL(activated()), this, SLOT(selectThirdTab()));
+  connect(m_fourthTabShortcut, SIGNAL(activated()), this, SLOT(selectFourthTab()));
+  connect(m_fifthTabShortcut, SIGNAL(activated()), this, SLOT(selectFifthTab()));
+  connect(m_sixthTabShortcut, SIGNAL(activated()), this, SLOT(selectSixthTab()));
+  connect(m_seventhTabShortcut, SIGNAL(activated()), this, SLOT(selectSeventhTab()));
+  connect(m_eighthTabShortcut, SIGNAL(activated()), this, SLOT(selectEighthTab()));
+  connect(m_ninthTabShortcut, SIGNAL(activated()), this, SLOT(selectNinthTab()));
+
+  m_ui.serverTab->setFocus();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -129,6 +154,74 @@ void MainWindow::echoCommandReceived(const QString &text)
     tab = (AbstractTab *) m_ui.serverTab;
   }
   tab->echoReceived(text);
+}
+
+void MainWindow::selectNextTab()
+{
+  int i = m_ui.tabWidget->currentIndex();
+  if (i < (m_ui.tabWidget->count() - 1)) {
+    m_ui.tabWidget->setCurrentIndex(i + 1);
+  }
+}
+
+void MainWindow::selectPreviousTab()
+{
+  int i = m_ui.tabWidget->currentIndex();
+  if (i > 0) {
+    m_ui.tabWidget->setCurrentIndex(i - 1);
+  }
+}
+
+void MainWindow::selectFirstTab()
+{
+  selectTab(0);
+}
+
+void MainWindow::selectSecondTab()
+{
+  selectTab(1);
+}
+
+void MainWindow::selectThirdTab()
+{
+  selectTab(2);
+}
+
+void MainWindow::selectFourthTab()
+{
+  selectTab(3);
+}
+
+void MainWindow::selectFifthTab()
+{
+  selectTab(4);
+}
+
+void MainWindow::selectSixthTab()
+{
+  selectTab(5);
+}
+
+void MainWindow::selectSeventhTab()
+{
+  selectTab(6);
+}
+
+void MainWindow::selectEighthTab()
+{
+  selectTab(7);
+}
+
+void MainWindow::selectNinthTab()
+{
+  selectTab(8);
+}
+
+void MainWindow::selectTab(int index)
+{
+  if (m_ui.tabWidget->count() > index) {
+    m_ui.tabWidget->setCurrentIndex(index);
+  }
 }
 
 void MainWindow::addTab(AbstractTab *tab, const QString &name)
