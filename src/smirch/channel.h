@@ -15,7 +15,6 @@ class Channel : public Conversation
 
     const QString &name() const;
     QString recipient() const;
-    const QStringList &nicks() const;
     NickListModel *nickListModel() const;
 
     bool includes(IrcJoinMessage *message);

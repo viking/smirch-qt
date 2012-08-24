@@ -17,7 +17,7 @@ QWebView *Tab::webView() const
   return m_ui.webView;
 }
 
-QLineEdit *Tab::lineEdit() const
+LineEdit *Tab::lineEdit() const
 {
   return m_ui.lineEdit;
 }
@@ -25,6 +25,5 @@ QLineEdit *Tab::lineEdit() const
 void Tab::setupUi()
 {
   m_ui.setupUi(this);
-  setupLineEdit();
   setFocusProxy(m_ui.lineEdit);
 }

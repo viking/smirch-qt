@@ -11,16 +11,28 @@ class NickListModel : public QAbstractListModel
   public:
     NickListModel(QObject *parent = 0);
 
-    void setStringList(const QStringList &list);
-    const QStringList &stringList() const;
+    void setNicks(const QStringList &nicks);
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
     void addNick(const QString &nick);
     void removeNick(const QString &nick);
-    int indexOf(const QString &value, int from = 0) const;
+
+    int indexOfNick(const QString &nick, int from = 0) const;
 
   private:
-    QStringList m_list;
+    enum PrivilegesFlags
+    {
+      NoPrivileges = 0x0,
+      OpPrivileges = 0x1,
+      VoicePrivileges = 0x2
+    };
+
+    QList<QPair<QString, int> > m_list;
+
+    QPair<QString, int> nickPairFromString(const QString &nick);
+    QString nickWithSymbols(int i) const;
 };
 
 #endif

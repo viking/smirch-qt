@@ -1,5 +1,6 @@
 #include <Irc>
 #include "channel.h"
+#include <QtDebug>
 
 Channel::Channel(const QString &name, QObject *parent)
   : Conversation(parent), m_name(name)
@@ -15,11 +16,6 @@ const QString &Channel::name() const
 QString Channel::recipient() const
 {
   return name();
-}
-
-const QStringList &Channel::nicks() const
-{
-  return m_nickListModel->stringList();
 }
 
 NickListModel *Channel::nickListModel() const
@@ -63,7 +59,7 @@ bool Channel::includes(IrcPartMessage *message)
 
 bool Channel::includes(IrcQuitMessage *message)
 {
-  return (m_nickListModel->indexOf(message->sender().name()) >= 0);
+  return (m_nickListModel->indexOfNick(message->sender().name()) >= 0);
 }
 
 bool Channel::includes(IrcTopicMessage *message)
@@ -83,7 +79,7 @@ void Channel::handleNumericMessage(IrcNumericMessage *message)
     case Irc::RPL_ENDOFNAMES:
       m_mutex.lock();
       m_newNicks.sort();
-      m_nickListModel->setStringList(m_newNicks);
+      m_nickListModel->setNicks(m_newNicks);
       m_newNicks.clear();
       m_mutex.unlock();
       break;

@@ -14,7 +14,7 @@ class Tab : public AbstractTab
 
   protected:
     QWebView *webView() const;
-    QLineEdit *lineEdit() const;
+    LineEdit *lineEdit() const;
 
   private:
     Ui::Tab m_ui;

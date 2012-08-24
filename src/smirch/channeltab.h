@@ -1,6 +1,7 @@
 #ifndef __CHANNELTAB_H
 #define __CHANNELTAB_H
 
+#include <QCompleter>
 #include "abstracttab.h"
 #include "ui_channeltab.h"
 
@@ -13,10 +14,11 @@ class ChannelTab : public AbstractTab
 
   protected:
     QWebView *webView() const;
-    QLineEdit *lineEdit() const;
+    LineEdit *lineEdit() const;
 
   private:
     Ui::ChannelTab m_ui;
+    QCompleter *m_completer;
 
     void setupUi();
 };

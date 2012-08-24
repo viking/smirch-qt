@@ -88,6 +88,15 @@ void AbstractTab::on_webView_loadFinished(bool ok)
   m_appendMutex.unlock();
 }
 
+void AbstractTab::on_lineEdit_returnPressed()
+{
+  LineEdit *widget = lineEdit();
+  QString text = widget->text();
+  emit inputReceived(recipient(), text);
+  widget->clear();
+}
+
+
 void AbstractTab::connecting()
 {
   Session *session = qobject_cast<Session *>(QObject::sender());
@@ -189,54 +198,6 @@ void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
 void AbstractTab::capabilityMessageReceived(IrcCapabilityMessage *message)
 {
   appendMessage(MessageFormatter::format(message, m_messageNumber++));
-}
-
-void AbstractTab::handleInput()
-{
-  QLineEdit *widget = lineEdit();
-  QString text = widget->text();
-  emit inputReceived(recipient(), text);
-  m_lineEditHistory << text;
-  widget->clear();
-  m_lineEditPosition = 0;
-}
-
-// FIXME: save any currently entered text?
-void AbstractTab::rollbackLineEdit()
-{
-  QLineEdit *widget = lineEdit();
-  if (widget->text().isEmpty()) {
-    m_lineEditPosition = 0;
-  }
-  int newIndex = m_lineEditHistory.count() + m_lineEditPosition - 1;
-  if (newIndex >= 0) {
-    widget->setText(m_lineEditHistory[newIndex]);
-    m_lineEditPosition--;
-  }
-}
-
-void AbstractTab::advanceLineEdit()
-{
-  QLineEdit *widget = lineEdit();
-  if (widget->text().isEmpty()) {
-    m_lineEditPosition = 0;
-  }
-  int newIndex = m_lineEditHistory.count() + m_lineEditPosition + 1;
-  if (newIndex < m_lineEditHistory.count()) {
-    widget->setText(m_lineEditHistory[newIndex]);
-    m_lineEditPosition++;
-  }
-}
-
-void AbstractTab::setupLineEdit()
-{
-  QLineEdit *widget = lineEdit();
-  connect(widget, SIGNAL(returnPressed()), this, SLOT(handleInput()));
-
-  QShortcut *upShortcut = new QShortcut(QKeySequence("Up"), widget);
-  QShortcut *downShortcut = new QShortcut(QKeySequence("Down"), widget);
-  connect(upShortcut, SIGNAL(activated()), this, SLOT(rollbackLineEdit()));
-  connect(downShortcut, SIGNAL(activated()), this, SLOT(advanceLineEdit()));
 }
 
 void AbstractTab::internalAppendMessage(const QString &text)

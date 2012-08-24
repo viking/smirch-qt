@@ -5,10 +5,10 @@
 #include <QWebView>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QLineEdit>
 #include <QStringList>
 #include <QMutex>
 #include "conversation.h"
+#include "lineedit.h"
 
 class AbstractTab : public QWidget
 {
@@ -30,6 +30,7 @@ class AbstractTab : public QWidget
 
   protected slots:
     void on_webView_loadFinished(bool ok);
+    void on_lineEdit_returnPressed();
 
     void connecting();
     void connected();
@@ -51,26 +52,18 @@ class AbstractTab : public QWidget
     void topicMessageReceived(IrcTopicMessage *message);
     void capabilityMessageReceived(IrcCapabilityMessage *message);
 
-    void handleInput();
-
-    void rollbackLineEdit();
-    void advanceLineEdit();
-
   protected:
     Conversation *m_conversation;
     QWebElement m_body;
     bool m_pageLoaded;
-    int m_lineEditPosition;
 
     virtual QWebView *webView() const = 0;
-    virtual QLineEdit *lineEdit() const = 0;
-    void setupLineEdit();
+    virtual LineEdit *lineEdit() const = 0;
 
   private:
     int m_messageNumber;
     QStringList m_appendQueue;
     QMutex m_appendMutex;
-    QStringList m_lineEditHistory;
 
     void internalAppendMessage(const QString &text);
 };

@@ -13,7 +13,7 @@ QWebView *ChannelTab::webView() const
   return m_ui.webView;
 }
 
-QLineEdit *ChannelTab::lineEdit() const
+LineEdit *ChannelTab::lineEdit() const
 {
   return m_ui.lineEdit;
 }
@@ -21,7 +21,11 @@ QLineEdit *ChannelTab::lineEdit() const
 void ChannelTab::setupUi()
 {
   m_ui.setupUi(this);
-  setupLineEdit();
-  m_ui.nicks->setModel(static_cast<Channel *>(m_conversation)->nickListModel());
   setFocusProxy(m_ui.lineEdit);
+
+  NickListModel *nickListModel = static_cast<Channel *>(m_conversation)->nickListModel();
+  m_ui.nicks->setModel(nickListModel);
+
+  m_completer = new QCompleter(nickListModel, this);
+  m_ui.lineEdit->setCompleter(m_completer);
 }
