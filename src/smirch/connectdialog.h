@@ -17,6 +17,7 @@ class ConnectDialog : public QDialog
     QString username() const;
     QString realName() const;
     QString nickPassword() const;
+    bool useSsl() const;
 
   private slots:
     void on_buttonBox_accepted();

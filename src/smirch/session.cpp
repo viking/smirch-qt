@@ -22,6 +22,14 @@ void Session::setNickPassword(const QString &nickPassword)
   }
 }
 
+void Session::useSsl()
+{
+  QSslSocket *s = new QSslSocket(this);
+  connect(s, SIGNAL(sslErrors(const QList<QSslError> &)),
+      this, SLOT(sslErrorsOccurred(const QList<QSslError> &)));
+  setSocket(static_cast<QAbstractSocket*>(s));
+}
+
 void Session::sendPassword(QString *password)
 {
   /* Sanity check */
@@ -147,6 +155,14 @@ void Session::queryClosed()
   Query *query = qobject_cast<Query *>(QObject::sender());
   if (query != NULL) {
     removeConversation(query);
+  }
+}
+
+void Session::sslErrorsOccurred(const QList<QSslError> &errors)
+{
+  qDebug() << "SSL errors occurred!";
+  for (int i = 0; i < errors.count(); i++) {
+    qDebug() << errors.at(i).errorString();
   }
 }
 

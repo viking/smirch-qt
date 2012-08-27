@@ -12,6 +12,7 @@ ConnectDialog::ConnectDialog(QWidget *parent)
   m_ui.leUsername->setText(settings.value("user").toString());
   m_ui.leRealName->setText(settings.value("real").toString());
   m_ui.leNickPassword->setText(settings.value("nickpasswd").toString());
+  m_ui.cbSsl->setChecked(settings.value("ssl", false).toBool());
   settings.endGroup();
 }
 
@@ -45,6 +46,11 @@ QString ConnectDialog::nickPassword() const
   return m_ui.leNickPassword->text();
 }
 
+bool ConnectDialog::useSsl() const
+{
+  return m_ui.cbSsl->isChecked();
+}
+
 void ConnectDialog::on_buttonBox_accepted()
 {
   if (!server().isEmpty() && !nickname().isEmpty() &&
@@ -57,6 +63,7 @@ void ConnectDialog::on_buttonBox_accepted()
     settings.setValue("user", username());
     settings.setValue("real", realName());
     settings.setValue("nickpasswd", nickPassword());
+    settings.setValue("ssl", useSsl());
     settings.endGroup();
 
     accept();

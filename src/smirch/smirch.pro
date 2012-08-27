@@ -5,7 +5,7 @@ TEMPLATE = app
 DESTDIR = ../../bin
 
 CONFIG += communi debug
-QT += webkit
+QT += webkit network
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc

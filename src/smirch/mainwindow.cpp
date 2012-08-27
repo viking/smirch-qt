@@ -90,6 +90,9 @@ void MainWindow::on_actionConnect_triggered()
     m_session->setNickName(dialog.nickname());
     m_session->setRealName(dialog.realName());
     m_session->setNickPassword(dialog.nickPassword());
+    if (dialog.useSsl()) {
+      m_session->useSsl();
+    }
 
     connect(m_session, SIGNAL(serverNumericMessageReceived(IrcNumericMessage *)),
         m_ui.serverTab, SLOT(numericMessageReceived(IrcNumericMessage *)));

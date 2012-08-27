@@ -4,6 +4,7 @@
 #include <IrcSession>
 #include <IrcMessage>
 #include <IrcCommand>
+#include <QSslSocket>
 #include <QMutex>
 #include <QList>
 
@@ -18,6 +19,7 @@ class Session : public IrcSession
   public:
     Session(QObject *parent = 0);
     void setNickPassword(const QString &nickPassword);
+    void useSsl();
 
   signals:
     void queryStarted(Query *query);
@@ -32,6 +34,7 @@ class Session : public IrcSession
     void handleCommand(IrcCommand *command);
     void channelClosed();
     void queryClosed();
+    void sslErrorsOccurred(const QList<QSslError> &errors);
 
   private:
     QMutex m_mutex;
