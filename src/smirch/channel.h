@@ -15,6 +15,7 @@ class Channel : public Conversation
 
     const QString &name() const;
     QString recipient() const;
+    const QString &topic() const;
     NickListModel *nickListModel() const;
 
     bool includes(IrcJoinMessage *message);
@@ -29,12 +30,19 @@ class Channel : public Conversation
     void handleJoinMessage(IrcJoinMessage *message);
     void handlePartMessage(IrcPartMessage *message);
     void handleQuitMessage(IrcQuitMessage *message);
+    void handleTopicMessage(IrcTopicMessage *message);
+
+  signals:
+    void topicChanged(const QString &topic);
 
   private:
     QString m_name;
+    QString m_topic;
     NickListModel *m_nickListModel;
     QStringList m_newNicks;
     QMutex m_mutex;
+
+    void setTopic(QString topic);
 };
 
 #endif

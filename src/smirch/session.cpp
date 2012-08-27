@@ -101,6 +101,7 @@ void Session::handleCommand(IrcCommand *command)
     message = IrcMessage::fromCommand(nickName(), command, this);
   }
 
+  //qDebug() << "Sending command:" << command->toString();
   if (sendCommand(command)) {
     if (message != NULL) {
       handleMessage(message);

@@ -16,6 +16,9 @@ class ChannelTab : public AbstractTab
     QWebView *webView() const;
     LineEdit *lineEdit() const;
 
+  private slots:
+    void topicChanged(const QString &topic);
+
   private:
     Ui::ChannelTab m_ui;
     QCompleter *m_completer;

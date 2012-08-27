@@ -18,19 +18,57 @@ void InputHandler::handleInput(const QString &target, const QString &text)
     QStringList args = predicate.split(s_spacesPattern);
 
     if (commandName == "join") {
-      command = IrcCommand::createJoin(args[0]);
+      if (args.count() > 0) {
+        command = IrcCommand::createJoin(args[0]);
+      }
+    }
+    else if (commandName == "msg") {
+      if (args.count() > 1) {
+        command = IrcCommand::createMessage(args[0], predicate.section(" ", 1));
+      }
+    }
+    else if (commandName == "names") {
+      if (args.count() > 0) {
+        command = IrcCommand::createNames(args[0]);
+      }
+    }
+    else if (commandName == "notice") {
+      if (args.count() > 1) {
+        command = IrcCommand::createNotice(args[0], predicate.section(" ", 1));
+      }
     }
     else if (commandName == "part") {
-      command = IrcCommand::createPart(args[0]);
+      if (args.count() > 0) {
+        command = IrcCommand::createPart(args[0]);
+      }
     }
     else if (commandName == "quit") {
       command = IrcCommand::createQuit(predicate);
     }
-    else if (commandName == "msg") {
-      command = IrcCommand::createMessage(args[0], predicate.section(" ", 1));
+    else if (commandName == "topic") {
+      if (args.count() > 0) {
+        if (args[0].startsWith('#')) {
+          command = IrcCommand::createTopic(args[0], predicate.section(" ", 1));
+        }
+        else {
+          command = IrcCommand::createTopic(target, predicate);
+        }
+      }
     }
-    else if (commandName == "notice") {
-      command = IrcCommand::createNotice(args[0], predicate.section(" ", 1));
+    else if (commandName == "who") {
+      if (args.count() > 0) {
+        command = IrcCommand::createWho(args[0]);
+      }
+    }
+    else if (commandName == "whois") {
+      if (args.count() > 0) {
+        command = IrcCommand::createWhois(args[0]);
+      }
+    }
+    else if (commandName == "whowas") {
+      if (args.count() > 0) {
+        command = IrcCommand::createWhowas(args[0]);
+      }
     }
     else if (commandName == "echo") {
       emit echoCommandReceived(predicate);
