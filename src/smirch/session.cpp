@@ -9,6 +9,27 @@ Session::Session(QObject *parent)
       this, SLOT(handleMessage(IrcMessage *)));
 }
 
+void Session::setNickPassword(const QString &nickPassword)
+{
+  m_nickPassword = nickPassword;
+  if (m_nickPassword.isEmpty()) {
+    disconnect(this, SIGNAL(password(QString *)),
+        this, SLOT(sendPassword(QString *)));
+  }
+  else {
+    connect(this, SIGNAL(password(QString *)),
+        this, SLOT(sendPassword(QString *)));
+  }
+}
+
+void Session::sendPassword(QString *password)
+{
+  /* Sanity check */
+  if (!m_nickPassword.isEmpty()) {
+    *password = QString("%1:%2").arg(nickName()).arg(m_nickPassword);
+  }
+}
+
 void Session::handleMessage(IrcMessage *message)
 {
   Conversation *conversation = NULL;

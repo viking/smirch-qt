@@ -89,6 +89,7 @@ void MainWindow::on_actionConnect_triggered()
     m_session->setUserName(dialog.username());
     m_session->setNickName(dialog.nickname());
     m_session->setRealName(dialog.realName());
+    m_session->setNickPassword(dialog.nickPassword());
 
     connect(m_session, SIGNAL(serverNumericMessageReceived(IrcNumericMessage *)),
         m_ui.serverTab, SLOT(numericMessageReceived(IrcNumericMessage *)));

@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
 
   private slots:
     void on_actionConnect_triggered();
+
     void queryStarted(Query *query);
     void channelJoined(Channel *channel);
     void closeWindow();

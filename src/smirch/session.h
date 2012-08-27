@@ -17,6 +17,7 @@ class Session : public IrcSession
 
   public:
     Session(QObject *parent = 0);
+    void setNickPassword(const QString &nickPassword);
 
   signals:
     void queryStarted(Query *query);
@@ -26,6 +27,7 @@ class Session : public IrcSession
     void noticeMessageReceived(IrcNoticeMessage *message);
 
   private slots:
+    void sendPassword(QString *password);
     void handleMessage(IrcMessage *message);
     void handleCommand(IrcCommand *command);
     void channelClosed();
@@ -34,6 +36,7 @@ class Session : public IrcSession
   private:
     QMutex m_mutex;
     QList<Conversation *> m_conversations;
+    QString m_nickPassword;
 
     Query *createQuery(Person *person);
     Channel *createChannel(const QString &name);

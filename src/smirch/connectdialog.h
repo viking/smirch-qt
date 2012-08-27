@@ -16,6 +16,7 @@ class ConnectDialog : public QDialog
     QString nickname() const;
     QString username() const;
     QString realName() const;
+    QString nickPassword() const;
 
   private slots:
     void on_buttonBox_accepted();

@@ -11,6 +11,7 @@ ConnectDialog::ConnectDialog(QWidget *parent)
   m_ui.leNickname->setText(settings.value("nick").toString());
   m_ui.leUsername->setText(settings.value("user").toString());
   m_ui.leRealName->setText(settings.value("real").toString());
+  m_ui.leNickPassword->setText(settings.value("nickpasswd").toString());
   settings.endGroup();
 }
 
@@ -39,6 +40,11 @@ QString ConnectDialog::realName() const
   return m_ui.leRealName->text();
 }
 
+QString ConnectDialog::nickPassword() const
+{
+  return m_ui.leNickPassword->text();
+}
+
 void ConnectDialog::on_buttonBox_accepted()
 {
   if (!server().isEmpty() && !nickname().isEmpty() &&
@@ -50,6 +56,7 @@ void ConnectDialog::on_buttonBox_accepted()
     settings.setValue("nick", nickname());
     settings.setValue("user", username());
     settings.setValue("real", realName());
+    settings.setValue("nickpasswd", nickPassword());
     settings.endGroup();
 
     accept();
