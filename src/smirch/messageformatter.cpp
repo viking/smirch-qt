@@ -23,7 +23,7 @@ const QString MessageFormatter::s_partTemplate =
 const QString MessageFormatter::s_partWithReasonTemplate =
   QString("<div id=\"message-%1\" class=\"part\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has left %6 (%7)</div>\n");
 const QString MessageFormatter::s_privateTemplate =
-  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;%3&gt; %4</div>\n");
+  QString("<div id=\"message-%1\" class=\"message\"><span class=\"timestamp\">[%2]</span> &lt;<span style=\"color: %3;\">%4</span>&gt; %5</div>\n");
 const QString MessageFormatter::s_actionTemplate =
   QString("<div id=\"message-%1\" class=\"action\"><span class=\"timestamp\">[%2]</span> * %3 %4</div>\n");
 const QString MessageFormatter::s_quitTemplate =
@@ -141,6 +141,7 @@ QString MessageFormatter::format(IrcPrivateMessage *message, int id)
   }
   else {
     return(s_privateTemplate.arg(id).arg(currentTimestamp()).
+        arg(NickColorer::colorFor(message->sender()).name()).
         arg(message->sender().name()).
         arg(IrcUtil::messageToHtml(message->message())));
   }

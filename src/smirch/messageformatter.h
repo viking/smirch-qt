@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <IrcMessage>
+#include "nickcolorer.h"
 
 class MessageFormatter : public QObject
 {
