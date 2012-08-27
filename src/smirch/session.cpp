@@ -111,9 +111,27 @@ void Session::handleCommand(IrcCommand *command)
   }
 }
 
+void Session::channelClosed()
+{
+  Channel *channel = qobject_cast<Channel *>(QObject::sender());
+  if (channel != NULL) {
+    sendCommand(IrcCommand::createPart(channel->name()));
+    removeConversation(channel);
+  }
+}
+
+void Session::queryClosed()
+{
+  Query *query = qobject_cast<Query *>(QObject::sender());
+  if (query != NULL) {
+    removeConversation(query);
+  }
+}
+
 Query *Session::createQuery(Person *person)
 {
   Query *query = new Query(person, this);
+  connect(query, SIGNAL(closed()), this, SLOT(queryClosed()));
   m_conversations.append((Conversation *) query);
   return query;
 }
@@ -121,6 +139,14 @@ Query *Session::createQuery(Person *person)
 Channel *Session::createChannel(const QString &name)
 {
   Channel *channel = new Channel(name, this);
+  connect(channel, SIGNAL(closed()), this, SLOT(channelClosed()));
   m_conversations.append((Conversation *) channel);
   return channel;
+}
+
+void Session::removeConversation(Conversation *conversation)
+{
+  m_conversations.removeOne(conversation);
+  connect(conversation, 0, 0, 0);
+  conversation->deleteLater();
 }

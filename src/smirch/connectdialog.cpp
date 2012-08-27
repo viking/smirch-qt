@@ -4,6 +4,14 @@ ConnectDialog::ConnectDialog(QWidget *parent)
   : QDialog(parent)
 {
   m_ui.setupUi(this);
+
+  settings.beginGroup("connect");
+  m_ui.leServer->setText(settings.value("host", "irc.freenode.net").toString());
+  m_ui.sbPort->setValue(settings.value("port", 6667).toInt());
+  m_ui.leNickname->setText(settings.value("nick").toString());
+  m_ui.leUsername->setText(settings.value("user").toString());
+  m_ui.leRealName->setText(settings.value("real").toString());
+  settings.endGroup();
 }
 
 QString ConnectDialog::server() const
@@ -35,6 +43,15 @@ void ConnectDialog::on_buttonBox_accepted()
 {
   if (!server().isEmpty() && !nickname().isEmpty() &&
       !username().isEmpty() && !realName().isEmpty()) {
+
+    settings.beginGroup("connect");
+    settings.setValue("host", server());
+    settings.setValue("port", port());
+    settings.setValue("nick", nickname());
+    settings.setValue("user", username());
+    settings.setValue("real", realName());
+    settings.endGroup();
+
     accept();
   }
 }

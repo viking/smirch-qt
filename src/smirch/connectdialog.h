@@ -2,6 +2,7 @@
 #define __CONNECTDIALOG_H
 
 #include <QDialog>
+#include <QSettings>
 #include "ui_connectdialog.h"
 
 class ConnectDialog : public QDialog
@@ -21,6 +22,7 @@ class ConnectDialog : public QDialog
 
   private:
     Ui::ConnectDialog m_ui;
+    QSettings settings;
 };
 
 #endif

@@ -26,15 +26,19 @@ void InputHandler::handleInput(const QString &target, const QString &text)
     else if (commandName == "quit") {
       command = IrcCommand::createQuit(predicate);
     }
-    else if (commandName == "echo") {
-      emit echoCommandReceived(predicate);
-      return;
-    }
     else if (commandName == "msg") {
       command = IrcCommand::createMessage(args[0], predicate.section(" ", 1));
     }
     else if (commandName == "notice") {
       command = IrcCommand::createNotice(args[0], predicate.section(" ", 1));
+    }
+    else if (commandName == "echo") {
+      emit echoCommandReceived(predicate);
+      return;
+    }
+    else if (commandName == "close") {
+      emit closeCommandReceived();
+      return;
     }
   }
   else if (!target.isEmpty()) {

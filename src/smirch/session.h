@@ -28,6 +28,8 @@ class Session : public IrcSession
   private slots:
     void handleMessage(IrcMessage *message);
     void handleCommand(IrcCommand *command);
+    void channelClosed();
+    void queryClosed();
 
   private:
     QMutex m_mutex;
@@ -35,6 +37,7 @@ class Session : public IrcSession
 
     Query *createQuery(Person *person);
     Channel *createChannel(const QString &name);
+    void removeConversation(Conversation *conversation);
 };
 
 #endif

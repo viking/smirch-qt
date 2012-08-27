@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
     void closeWindow();
     void noticeMessageReceived(IrcNoticeMessage *message);
     void echoCommandReceived(const QString &text);
+    void closeCommandReceived();
 
     void selectNextTab();
     void selectPreviousTab();

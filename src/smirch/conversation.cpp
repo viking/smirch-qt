@@ -288,3 +288,8 @@ void Conversation::handleCapabilityMessage(IrcCapabilityMessage *message)
 {
   emit capabilityMessageReceived(message);
 }
+
+void Conversation::close()
+{
+  emit closed();
+}

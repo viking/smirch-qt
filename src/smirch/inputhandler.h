@@ -14,6 +14,7 @@ class InputHandler : public QObject
   signals:
     void ircCommandReceived(IrcCommand *command);
     void echoCommandReceived(const QString &text);
+    void closeCommandReceived();
 
   public slots:
     void handleInput(const QString &target, const QString &text);

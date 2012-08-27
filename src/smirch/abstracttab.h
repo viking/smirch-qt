@@ -7,6 +7,7 @@
 #include <QWebElement>
 #include <QStringList>
 #include <QMutex>
+#include <QCloseEvent>
 #include "conversation.h"
 #include "lineedit.h"
 
@@ -59,6 +60,7 @@ class AbstractTab : public QWidget
 
     virtual QWebView *webView() const = 0;
     virtual LineEdit *lineEdit() const = 0;
+    void closeEvent(QCloseEvent *event);
 
   private:
     int m_messageNumber;

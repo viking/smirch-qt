@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
       &inputHandler, SLOT(handleInput(const QString &, const QString &)));
   connect(&inputHandler, SIGNAL(echoCommandReceived(const QString &)),
       this, SLOT(echoCommandReceived(const QString &)));
+  connect(&inputHandler, SIGNAL(closeCommandReceived()),
+      this, SLOT(closeCommandReceived()));
 
   m_closeTimer.setSingleShot(true);
   connect(&m_closeTimer, SIGNAL(timeout()), this, SLOT(closeWindow()));
@@ -154,6 +156,20 @@ void MainWindow::echoCommandReceived(const QString &text)
     tab = (AbstractTab *) m_ui.serverTab;
   }
   tab->echoReceived(text);
+}
+
+void MainWindow::closeCommandReceived()
+{
+  AbstractTab *tab = currentTab();
+  if (tab != NULL) {
+    if (tab == m_ui.serverTab) {
+      close();
+    }
+    else {
+      m_ui.tabWidget->removeTab(m_ui.tabWidget->currentIndex());
+      tab->close();
+    }
+  }
 }
 
 void MainWindow::selectNextTab()

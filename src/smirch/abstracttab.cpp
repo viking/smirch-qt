@@ -96,7 +96,6 @@ void AbstractTab::on_lineEdit_returnPressed()
   widget->clear();
 }
 
-
 void AbstractTab::connecting()
 {
   Session *session = qobject_cast<Session *>(QObject::sender());
@@ -198,6 +197,12 @@ void AbstractTab::topicMessageReceived(IrcTopicMessage *message)
 void AbstractTab::capabilityMessageReceived(IrcCapabilityMessage *message)
 {
   appendMessage(MessageFormatter::format(message, m_messageNumber++));
+}
+
+void AbstractTab::closeEvent(QCloseEvent *event)
+{
+  m_conversation->close();
+  event->accept();
 }
 
 void AbstractTab::internalAppendMessage(const QString &text)

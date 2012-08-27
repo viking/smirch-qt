@@ -65,6 +65,10 @@ class Conversation : public QObject
     void quitMessageReceived(IrcQuitMessage *message);
     void topicMessageReceived(IrcTopicMessage *message);
     void capabilityMessageReceived(IrcCapabilityMessage *message);
+    void closed();
+
+  public slots:
+    virtual void close();
 };
 
 #endif
