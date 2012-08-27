@@ -257,6 +257,7 @@ void MainWindow::addTab(AbstractTab *tab, const QString &name)
 
   m_ui.tabWidget->addTab(tab, name);
   m_ui.tabWidget->setCurrentIndex(m_ui.tabWidget->count() - 1);
+  tab->setFocus();
 }
 
 AbstractTab *MainWindow::currentTab()

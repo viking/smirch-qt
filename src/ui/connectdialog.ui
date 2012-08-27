@@ -134,6 +134,7 @@
   <tabstop>leUsername</tabstop>
   <tabstop>leRealName</tabstop>
   <tabstop>leNickPassword</tabstop>
+  <tabstop>cbSsl</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
@@ -145,12 +146,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>312</x>
+     <y>245</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
-     <y>274</y>
+     <y>254</y>
     </hint>
    </hints>
   </connection>

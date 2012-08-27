@@ -1,6 +1,7 @@
+#include <IrcUtil>
+#include <QScrollBar>
 #include "channeltab.h"
 #include "channel.h"
-#include <IrcUtil>
 #include <QtDebug>
 
 ChannelTab::ChannelTab(Conversation *conversation, QWidget *parent)
@@ -18,7 +19,23 @@ void ChannelTab::topicChanged(const QString &topic)
     m_ui.topic->hide();
   }
   else {
-    m_ui.topic->setText(IrcUtil::messageToHtml(topic));
+    m_ui.topic->setHtml(IrcUtil::messageToHtml(topic));
+
+    /* Set topic height (based on QLineEdit */
+    int leftMargin, topMargin, rightMargin, bottomMargin;
+    m_ui.topic->getContentsMargins(&leftMargin, &topMargin, &rightMargin, &bottomMargin);
+    QFontMetrics fm(m_ui.topic->font());
+    int h = qMax(fm.height(), 14) + 4 + topMargin + bottomMargin;
+
+    /* Increase height if scrollbar is visible */
+    /*
+    QScrollBar *scrollBar = m_ui.topic->horizontalScrollBar();
+    if (scrollBar->isVisibleTo(m_ui.topic)) {
+      h += scrollBar->sizeHint().height();
+    }
+    */
+    m_ui.topic->setFixedHeight(h);
+
     m_ui.topic->show();
   }
 }
@@ -38,9 +55,11 @@ void ChannelTab::setupUi()
   m_ui.setupUi(this);
   setFocusProxy(m_ui.lineEdit);
 
+  /* Set model for nick view */
   NickListModel *nickListModel = static_cast<Channel *>(m_conversation)->nickListModel();
   m_ui.nicks->setModel(nickListModel);
 
+  /* Set nick completer */
   m_completer = new QCompleter(nickListModel, this);
   m_ui.lineEdit->setCompleter(m_completer);
 }
