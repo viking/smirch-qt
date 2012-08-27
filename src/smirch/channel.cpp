@@ -48,6 +48,7 @@ bool Channel::includes(IrcNumericMessage *message)
   switch (message->code()) {
     case Irc::RPL_NOTOPIC:
     case Irc::RPL_TOPIC:
+    case Irc::RPL_TOPICWHOTIME:
     case Irc::RPL_ENDOFNAMES:
       return message->parameters()[1] == m_name;
 
@@ -97,6 +98,10 @@ void Channel::handleNumericMessage(IrcNumericMessage *message)
       m_nickListModel->setNicks(m_newNicks);
       m_newNicks.clear();
       m_mutex.unlock();
+      break;
+
+    case Irc::RPL_TOPICWHOTIME:
+      /* Ignore */
       break;
 
     default:
