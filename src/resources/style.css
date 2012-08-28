@@ -1,6 +1,6 @@
 body {
   font-family: 'DejaVu Sans Mono';
-  font-size: 16pt;
+  font-size: 18pt;
   font-weight: 400;
   font-style: normal;
   background: black;
@@ -14,9 +14,10 @@ div.join {
   color: green;
 }
 div.part, div.quit {
-  color: brown;
+  color: purple;
 }
 a, a:visited {
+  color: lightblue;
   text-decoration: none;
 }
 a:hover {
