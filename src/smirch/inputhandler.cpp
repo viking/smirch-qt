@@ -70,6 +70,11 @@ void InputHandler::handleInput(const QString &target, const QString &text)
         command = IrcCommand::createWhowas(args[0]);
       }
     }
+    else if (commandName == "mode") {
+      if (args.count() > 1) {
+        command = IrcCommand::createMode(args[0], args[1], predicate.section(" ", 2));
+      }
+    }
     else if (commandName == "echo") {
       emit echoCommandReceived(predicate);
       return;

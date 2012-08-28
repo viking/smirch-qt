@@ -41,6 +41,8 @@ class MessageFormatter : public QObject
 
     static const QString s_defaultTemplate;
     static const QString s_joinTemplate;
+    static const QString s_modeTemplate;
+    static const QString s_serverModeTemplate;
     static const QString s_noticeTemplate;
     static const QString s_numericTemplate;
     static const QString s_partTemplate;

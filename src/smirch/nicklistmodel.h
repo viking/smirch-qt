@@ -20,19 +20,21 @@ class NickListModel : public QAbstractListModel
     void removeNick(const QString &nick);
 
     int indexOfNick(const QString &nick, int from = 0) const;
+    void setMode(const QString &mode, const QString &nick);
 
   private:
     enum PrivilegesFlags
     {
       NoPrivileges = 0x0,
-      OpPrivileges = 0x1,
-      VoicePrivileges = 0x2
+      VoicePrivileges = 0x1,
+      OpPrivileges = 0x2,
     };
 
     QList<QPair<QString, int> > m_list;
 
     QPair<QString, int> nickPairFromString(const QString &nick);
     QString nickWithSymbols(int i) const;
+    QString nickWithSymbols(const QPair<QString, int> &pair) const;
 };
 
 #endif

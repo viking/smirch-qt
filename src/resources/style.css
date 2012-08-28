@@ -12,6 +12,9 @@ div.join {
 div.part, div.quit {
   color: purple;
 }
+div.mode {
+  color: lightgreen;
+}
 a, a:visited {
   color: lightblue;
   text-decoration: none;

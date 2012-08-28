@@ -14,6 +14,10 @@ const QString MessageFormatter::s_defaultTemplate =
   QString("<div id=\"message-%1\"><span class=\"timestamp\">[%2]</span> %3</div>\n");
 const QString MessageFormatter::s_joinTemplate =
   QString("<div id=\"message-%1\" class=\"join\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) has joined %6</div>\n");
+const QString MessageFormatter::s_modeTemplate =
+  QString("<div id=\"message-%1\" class=\"mode\"><span class=\"timestamp\">[%2]</span> * %3 (%4@%5) sets mode %6</div>\n");
+const QString MessageFormatter::s_serverModeTemplate =
+  QString("<div id=\"message-%1\" class=\"mode\"><span class=\"timestamp\">[%2]</span> * %3 sets mode %4</div>\n");
 const QString MessageFormatter::s_noticeTemplate =
   QString("<div id=\"message-%1\" class=\"notice\"><span class=\"timestamp\">[%2]</span> -%3- %4</div>\n");
 const QString MessageFormatter::s_numericTemplate =
@@ -84,7 +88,20 @@ QString MessageFormatter::format(IrcKickMessage *message, int id)
 
 QString MessageFormatter::format(IrcModeMessage *message, int id)
 {
-  return(format((IrcMessage *) message, id));
+  IrcSender s = message->sender();
+  QString mode = message->mode();
+  if (!message->argument().isEmpty()) {
+    mode.append(" ").append(message->argument());
+  }
+
+  if (s.host().isEmpty()) {
+    return(s_serverModeTemplate.arg(id).arg(currentTimestamp()).
+        arg(s.name()).arg(mode));
+  }
+  else {
+    return(s_modeTemplate.arg(id).arg(currentTimestamp()).
+        arg(s.name()).arg(s.user()).arg(s.host()).arg(mode));
+  }
 }
 
 QString MessageFormatter::format(IrcNickMessage *message, int id)

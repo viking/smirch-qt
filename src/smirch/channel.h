@@ -28,6 +28,7 @@ class Channel : public Conversation
 
     void handleNumericMessage(IrcNumericMessage *message);
     void handleJoinMessage(IrcJoinMessage *message);
+    void handleModeMessage(IrcModeMessage *message);
     void handlePartMessage(IrcPartMessage *message);
     void handleQuitMessage(IrcQuitMessage *message);
     void handleTopicMessage(IrcTopicMessage *message);

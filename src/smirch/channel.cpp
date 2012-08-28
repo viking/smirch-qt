@@ -119,6 +119,18 @@ void Channel::handleJoinMessage(IrcJoinMessage *message)
   emit joinMessageReceived(message);
 }
 
+void Channel::handleModeMessage(IrcModeMessage *message)
+{
+  QString mode = message->mode();
+  QString argument = message->argument();
+  if ((mode.contains('o') || mode.contains('v')) && !argument.isEmpty()) {
+    m_mutex.lock();
+    m_nickListModel->setMode(mode, argument);
+    m_mutex.unlock();
+  }
+  emit modeMessageReceived(message);
+}
+
 void Channel::handlePartMessage(IrcPartMessage *message)
 {
   m_mutex.lock();
