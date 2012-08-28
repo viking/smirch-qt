@@ -1,6 +1,7 @@
 #include <IrcCommand>
 #include "mainwindow.h"
 #include "connectdialog.h"
+#include "preferencesdialog.h"
 #include "tab.h"
 #include "channeltab.h"
 
@@ -15,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(m_ui.serverTab, SIGNAL(inputReceived(const QString &, const QString &)),
       &inputHandler, SLOT(handleInput(const QString &, const QString &)));
+  connect(this, SIGNAL(fontChanged(const QFont &)),
+      m_ui.serverTab, SLOT(setFont(const QFont &)));
   connect(&inputHandler, SIGNAL(echoCommandReceived(const QString &)),
       this, SLOT(echoCommandReceived(const QString &)));
   connect(&inputHandler, SIGNAL(closeCommandReceived()),
@@ -117,6 +120,17 @@ void MainWindow::on_actionConnect_triggered()
         this, SLOT(noticeMessageReceived(IrcNoticeMessage *)));
 
     m_session->open();
+  }
+}
+
+void MainWindow::on_actionPreferences_triggered()
+{
+  PreferencesDialog dialog(this);
+  dialog.exec();
+
+  if (dialog.result() == QDialog::Accepted) {
+    QFont font = dialog.font();
+    emit fontChanged(font);
   }
 }
 
@@ -254,6 +268,8 @@ void MainWindow::addTab(AbstractTab *tab, const QString &name)
       tab, SLOT(connected()));
   connect(m_session, SIGNAL(disconnected()),
       tab, SLOT(disconnected()));
+  connect(this, SIGNAL(fontChanged(const QFont &)),
+      tab, SLOT(setFont(const QFont &)));
 
   m_ui.tabWidget->addTab(tab, name);
   m_ui.tabWidget->setCurrentIndex(m_ui.tabWidget->count() - 1);

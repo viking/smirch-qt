@@ -2,14 +2,15 @@
 #define __ABSTRACTTAB_H
 
 #include <QWidget>
-#include <QWebView>
 #include <QWebFrame>
 #include <QWebElement>
 #include <QStringList>
 #include <QMutex>
 #include <QCloseEvent>
+#include <QFont>
 #include "conversation.h"
 #include "lineedit.h"
+#include "webview.h"
 
 class AbstractTab : public QWidget
 {
@@ -26,6 +27,7 @@ class AbstractTab : public QWidget
     void inputReceived(const QString &target, const QString &text);
 
   public slots:
+    void setFont(const QFont &font);
     void noticeMessageReceived(IrcNoticeMessage *message);
     void echoReceived(const QString &text);
 
@@ -58,7 +60,7 @@ class AbstractTab : public QWidget
     QWebElement m_body;
     bool m_pageLoaded;
 
-    virtual QWebView *webView() const = 0;
+    virtual WebView *webView() const = 0;
     virtual LineEdit *lineEdit() const = 0;
     void closeEvent(QCloseEvent *event);
 

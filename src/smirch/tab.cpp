@@ -12,7 +12,7 @@ Tab::Tab(Conversation *conversation, QWidget *parent)
   setupUi();
 }
 
-QWebView *Tab::webView() const
+WebView *Tab::webView() const
 {
   return m_ui.webView;
 }

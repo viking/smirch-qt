@@ -72,6 +72,11 @@ void AbstractTab::appendMessage(QString text)
   }
 }
 
+void AbstractTab::setFont(const QFont &font)
+{
+  webView()->setFont(font);
+}
+
 void AbstractTab::echoReceived(const QString &text)
 {
   appendMessage(MessageFormatter::formatEcho(m_messageNumber++, text));

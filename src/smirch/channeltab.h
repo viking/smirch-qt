@@ -13,7 +13,7 @@ class ChannelTab : public AbstractTab
     ChannelTab(Conversation *conversation, QWidget *parent = 0);
 
   protected:
-    QWebView *webView() const;
+    WebView *webView() const;
     LineEdit *lineEdit() const;
 
   private slots:

@@ -17,11 +17,15 @@ class MainWindow : public QMainWindow
   public:
     MainWindow(QWidget *parent = 0);
 
+  signals:
+    void fontChanged(const QFont &font);
+
   protected:
     void closeEvent(QCloseEvent *event);
 
   private slots:
     void on_actionConnect_triggered();
+    void on_actionPreferences_triggered();
 
     void queryStarted(Query *query);
     void channelJoined(Channel *channel);

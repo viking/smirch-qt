@@ -40,7 +40,7 @@ void ChannelTab::topicChanged(const QString &topic)
   }
 }
 
-QWebView *ChannelTab::webView() const
+WebView *ChannelTab::webView() const
 {
   return m_ui.webView;
 }

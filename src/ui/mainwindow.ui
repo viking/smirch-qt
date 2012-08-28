@@ -46,18 +46,30 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionConnect"/>
-    <addaction name="action_Quit"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionPreferences"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu_Edit"/>
   </widget>
   <action name="actionConnect">
    <property name="text">
     <string>&amp;Connect</string>
    </property>
   </action>
-  <action name="action_Quit">
+  <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>&amp;Preferences</string>
    </property>
   </action>
  </widget>
@@ -75,7 +87,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>action_Quit</sender>
+   <sender>actionQuit</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>

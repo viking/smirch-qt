@@ -7,10 +7,28 @@
 
 #include <QtDebug>
 
+const QString WebView::s_fontStyleTemplate =
+  QString("<style class=\"font\" type=\"text/css\">body { font-family: \"%1\"; font-size: %2pt; }</style>");
+
 WebView::WebView(QWidget *parent)
   : QWebView(parent)
 {
   connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+}
+
+void WebView::setFont(const QFont &font)
+{
+  if (m_head.isNull())
+    return;
+
+  QString markup = s_fontStyleTemplate.arg(font.family()).arg(font.pointSize());
+  QWebElement fontStyle = m_head.findFirst("style.font");
+  if (fontStyle.isNull()) {
+    m_head.appendInside(markup);
+  }
+  else {
+    fontStyle.setOuterXml(markup);
+  }
 }
 
 void WebView::contextMenuEvent(QContextMenuEvent *ev)
@@ -34,7 +52,7 @@ void WebView::contextMenuEvent(QContextMenuEvent *ev)
       /* Show context menu for link */
       QAction *copyLink = pageAction(QWebPage::CopyLinkToClipboard);
       menu.addAction(copyLink);
-      QAction *openLink = menu.addAction("Open link in browser");
+      QAction *openLink = menu.addAction("Open Link in Browser");
 
       QAction *execResult = menu.exec(ev->globalPos());
       if (execResult == openLink) {
@@ -52,4 +70,11 @@ void WebView::contextMenuEvent(QContextMenuEvent *ev)
 void WebView::loadFinished(bool ok)
 {
   page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+  m_head = page()->mainFrame()->findFirstElement("head");
+
+  m_settings.beginGroup("preferences");
+  QFont font(m_settings.value("fontfamily", "DejaVu Sans Mono").toString(),
+      m_settings.value("fontsize", 18).toInt());
+  m_settings.endGroup();
+  setFont(font);
 }
