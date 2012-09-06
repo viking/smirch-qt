@@ -14,7 +14,7 @@ QColor NickColorer::colorFor(const IrcSender &sender)
     qreal hue = (qreal) qrand() / (qreal) RAND_MAX;
     hue += GOLDEN_RATIO_CONJ;
     hue = hue - (qint8) hue;
-    result.setHsvF(hue, 0.1, 0.9);
+    result.setHsvF(hue, 0.60, 0.95);
     settings.setValue(sender.name(), result.name());
   }
   return result;
