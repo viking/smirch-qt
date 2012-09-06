@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QStringList>
-#include <QMutex>
 #include <QCloseEvent>
 #include <QFont>
 #include "conversation.h"
@@ -32,7 +30,6 @@ class AbstractTab : public QWidget
     void echoReceived(const QString &text);
 
   protected slots:
-    void on_webView_loadFinished(bool ok);
     void on_lineEdit_returnPressed();
 
     void connecting();
@@ -57,8 +54,6 @@ class AbstractTab : public QWidget
 
   protected:
     Conversation *m_conversation;
-    QWebElement m_body;
-    bool m_pageLoaded;
 
     virtual WebView *webView() const = 0;
     virtual LineEdit *lineEdit() const = 0;
@@ -66,10 +61,6 @@ class AbstractTab : public QWidget
 
   private:
     int m_messageNumber;
-    QStringList m_appendQueue;
-    QMutex m_appendMutex;
-
-    void internalAppendMessage(const QString &text);
 };
 
 #endif

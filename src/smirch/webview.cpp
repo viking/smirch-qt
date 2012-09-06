@@ -11,9 +11,22 @@ const QString WebView::s_fontStyleTemplate =
   QString("<style class=\"font\" type=\"text/css\">body { font-family: \"%1\"; font-size: %2pt; }</style>");
 
 WebView::WebView(QWidget *parent)
-  : QWebView(parent)
+  : QWebView(parent), m_pageLoaded(false), m_lastScrollBarMaximum(0)
 {
   connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+}
+
+void WebView::appendHtml(const QString &markup)
+{
+  m_appendMutex.lock();
+  if (m_pageLoaded) {
+    m_appendMutex.unlock();
+    internalAppendHtml(markup);
+  }
+  else {
+    m_appendQueue << markup;
+    m_appendMutex.unlock();
+  }
 }
 
 void WebView::setFont(const QFont &font)
@@ -29,6 +42,20 @@ void WebView::setFont(const QFont &font)
   else {
     fontStyle.setOuterXml(markup);
   }
+}
+
+bool WebView::event(QEvent *event)
+{
+  /* Don't handle non-keyboard events */
+  if (event->type() != QEvent::KeyPress) {
+    return QWebView::event(event);
+  }
+  QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+  if (keyEvent->key() == Qt::Key_Tab) {
+    event->ignore();
+    return true;
+  }
+  return QWebView::event(event);
 }
 
 void WebView::contextMenuEvent(QContextMenuEvent *ev)
@@ -69,12 +96,48 @@ void WebView::contextMenuEvent(QContextMenuEvent *ev)
 
 void WebView::loadFinished(bool ok)
 {
+  QWebFrame *frame = page()->mainFrame();
+  connect(frame, SIGNAL(contentsSizeChanged(const QSize &)),
+      this, SLOT(frameSizeChanged(const QSize &)));
+
   page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-  m_head = page()->mainFrame()->findFirstElement("head");
+  m_head = frame->findFirstElement("head");
+  if (m_head.isNull()) {
+    qDebug() << "Couldn't find HEAD element";
+    return;
+  }
 
   m_settings.beginGroup("preferences");
   QFont font(m_settings.value("fontfamily", "DejaVu Sans Mono").toString(),
       m_settings.value("fontsize", 18).toInt());
   m_settings.endGroup();
   setFont(font);
+
+  m_body = frame->findFirstElement("body");
+  if (m_body.isNull()) {
+    qDebug() << "Couldn't find BODY element";
+    return;
+  }
+  m_appendMutex.lock();
+  m_pageLoaded = true;
+  for (int i = 0; i < m_appendQueue.count(); i++) {
+    internalAppendHtml(m_appendQueue.at(i));
+  }
+  m_appendQueue.clear();
+  m_appendMutex.unlock();
+}
+
+void WebView::frameSizeChanged(const QSize &)
+{
+  QWebFrame *frame = page()->mainFrame();
+  int scrollBarMaximum = frame->scrollBarMaximum(Qt::Vertical);
+  if (frame->scrollBarValue(Qt::Vertical) == m_lastScrollBarMaximum) {
+    frame->setScrollBarValue(Qt::Vertical, scrollBarMaximum);
+  }
+  m_lastScrollBarMaximum = scrollBarMaximum;
+}
+
+void WebView::internalAppendHtml(const QString &markup)
+{
+  m_body.appendInside(markup);
 }

@@ -8,12 +8,12 @@
 #include <QtDebug>
 
 AbstractTab::AbstractTab(QWidget *parent)
-  : QWidget(parent), m_conversation(NULL), m_pageLoaded(false), m_messageNumber(1)
+  : QWidget(parent), m_conversation(NULL), m_messageNumber(1)
 {
 }
 
 AbstractTab::AbstractTab(Conversation *conversation, QWidget *parent)
-  : QWidget(parent), m_conversation(conversation), m_pageLoaded(false), m_messageNumber(1)
+  : QWidget(parent), m_conversation(conversation), m_messageNumber(1)
 {
   connect(m_conversation, SIGNAL(unknownMessageReceived(IrcMessage *)),
       this, SLOT(unknownMessageReceived(IrcMessage *)));
@@ -61,15 +61,7 @@ QString AbstractTab::recipient() const
 
 void AbstractTab::appendMessage(QString text)
 {
-  m_appendMutex.lock();
-  if (m_pageLoaded) {
-    m_appendMutex.unlock();
-    internalAppendMessage(text);
-  }
-  else {
-    m_appendQueue << text;
-    m_appendMutex.unlock();
-  }
+  webView()->appendHtml(text);
 }
 
 void AbstractTab::setFont(const QFont &font)
@@ -80,17 +72,6 @@ void AbstractTab::setFont(const QFont &font)
 void AbstractTab::echoReceived(const QString &text)
 {
   appendMessage(MessageFormatter::formatEcho(m_messageNumber++, text));
-}
-
-void AbstractTab::on_webView_loadFinished(bool ok)
-{
-  m_appendMutex.lock();
-  m_pageLoaded = true;
-  for (int i = 0; i < m_appendQueue.count(); i++) {
-    internalAppendMessage(m_appendQueue.at(i));
-  }
-  m_appendQueue.clear();
-  m_appendMutex.unlock();
 }
 
 void AbstractTab::on_lineEdit_returnPressed()
@@ -208,19 +189,4 @@ void AbstractTab::closeEvent(QCloseEvent *event)
 {
   m_conversation->close();
   event->accept();
-}
-
-void AbstractTab::internalAppendMessage(const QString &text)
-{
-  QWebView *widget = webView();
-  QWebFrame *frame = widget->page()->mainFrame();
-  if (m_body.isNull()) {
-    m_body = frame->findFirstElement("body");
-  }
-
-  m_body.appendInside(text);
-  QString elementId = m_body.lastChild().attribute("id");
-  if (!elementId.isEmpty()) {
-    frame->scrollToAnchor(elementId);
-  }
 }
