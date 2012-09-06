@@ -68,24 +68,35 @@ void WebView::contextMenuEvent(QContextMenuEvent *ev)
     QWebHitTestResult hitResult = p->currentFrame()->hitTestContent(ev->pos());
     if (hitResult.linkElement().isNull()) {
       /* Show default menu */
-      QAction *printHtml = new QAction("Print HTML", this);
-      menu.addAction(printHtml);
+      if (p->hasSelection()) {
+        QAction *copyAction = pageAction(QWebPage::Copy);
+        menu.addAction(copyAction);
 
-      if (menu.exec(ev->globalPos()) == printHtml) {
-        qDebug() << p->mainFrame()->toHtml();
+        QAction *execResult = menu.exec(ev->globalPos());
+        if (execResult == copyAction) {
+          triggerPageAction(QWebPage::Copy);
+        }
+      }
+      else {
+        QAction *printHtmlAction = new QAction("Print HTML", this);
+        menu.addAction(printHtmlAction);
+
+        if (menu.exec(ev->globalPos()) == printHtmlAction) {
+          qDebug() << p->mainFrame()->toHtml();
+        }
       }
     }
     else {
       /* Show context menu for link */
-      QAction *copyLink = pageAction(QWebPage::CopyLinkToClipboard);
-      menu.addAction(copyLink);
-      QAction *openLink = menu.addAction("Open Link in Browser");
+      QAction *copyLinkAction = pageAction(QWebPage::CopyLinkToClipboard);
+      menu.addAction(copyLinkAction);
+      QAction *openLinkAction = menu.addAction("Open Link in Browser");
 
       QAction *execResult = menu.exec(ev->globalPos());
-      if (execResult == openLink) {
+      if (execResult == openLinkAction) {
         QDesktopServices::openUrl(hitResult.linkUrl());
       }
-      else if (execResult == copyLink) {
+      else if (execResult == copyLinkAction) {
         triggerPageAction(QWebPage::CopyLinkToClipboard);
       }
     }
